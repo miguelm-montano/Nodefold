@@ -43,5 +43,30 @@ class FolderTest extends TestCase {
 
         $this->assertEquals($user->id, $folder->$user->id);
     }
+
+    public function test_a_folder_can_be_deleted(): void {
+
+        $user = User::factory()->create();
+
+        $folder = Folder::create(['user_id' => $user->id, 'name' => 'Inspiration']);
+
+        $folder->delete();
+
+        $this->assertDatabaseMissing('folders', ['name' => 'Inspiration']);
+    }
+
+    public function test_deleting_parent_folder_deletes_childrens(): void {
+
+        $user = User::factory()->create();
+
+        $folder = Folder::create(['user_id' => $user->id, 'name' => 'Inspiration']);
+
+        Folder::create(['user_id' => $user->id, 'parent_id' => $parent->id, 'name' => 'Illustrations']);
+
+        $parent->delete();
+
+        $this->assertDatabaseMissing('folders', ['name' => 'Illustrations']);
+    }
+
    
 }
