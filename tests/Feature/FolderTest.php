@@ -41,7 +41,7 @@ class FolderTest extends TestCase {
 
         $folder = Folder::create(['user_id' => $user->id, 'name' => 'Inspiration']);
 
-        $this->assertEquals($user->id, $folder->$user->id);
+        $this->assertEquals($user->id, $folder->user->id);
     }
 
     public function test_a_folder_can_be_deleted(): void {
@@ -59,7 +59,7 @@ class FolderTest extends TestCase {
 
         $user = User::factory()->create();
 
-        $folder = Folder::create(['user_id' => $user->id, 'name' => 'Inspiration']);
+        $parent = Folder::create(['user_id' => $user->id, 'name' => 'Inspiration']);
 
         Folder::create(['user_id' => $user->id, 'parent_id' => $parent->id, 'name' => 'Illustrations']);
 
