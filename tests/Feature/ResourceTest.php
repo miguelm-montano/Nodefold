@@ -38,11 +38,11 @@ class ResourceTest extends TestCase {
 
         $user = User::factory()->create();
 
-        Resource::create(['user_id' => $user->id, 'title' => 'Arial', 'type' => 'font']);
+        $resource = Resource::create(['user_id' => $user->id, 'title' => 'Arial', 'type' => 'font']);
 
         $tag = Tag::create(['name' => 'modern']);
 
-        $resource->tag()->attach($tag->id);
+        $resource->tags()->attach($tag->id);
 
         $this->assertTrue($resource->tags->contains($tag));
 
