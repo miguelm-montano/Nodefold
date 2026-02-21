@@ -21,12 +21,13 @@
               style="stroke-width: 1" /></span>All tags</li>
       </ul>
 
+      <!-- FOLDERS SECTION -->
       <p class="text-gray-500 text-xs mb-2 font-['Montserrat',_serif]">Folders</p>
 
       <!-- Create new folder -->
       <div x-data="{ open: false }" class="mb-6 min-h-[2rem]">
 
-        <!-- Botón -->
+        <!-- BUTTON NEW FOLDER  -->
         <button x-show="!open" @click="open = true; $nextTick(() => $refs.input.focus())"
           class="text-sm text-gray-500 hover:text-black font-['Montserrat',_serif]">
           + Create new folder
