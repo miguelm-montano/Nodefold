@@ -8,9 +8,16 @@
   <div class="flex h-[80vh]">
 
     <!-- LEFT BAR -->
-    <aside class="w-64 h-screen border-r p-7 flex flex-col">
+    <aside x-data="{
+        showDeleteModal: false,
+        selectedFolder: null
+    }"
+      @open-delete.window="
+        selectedFolder = $event.detail;
+        showDeleteModal = true"
+      class="w-64 h-screen border-r p-8 flex flex-col">
 
-      <h1 class="text-3xl font-bold mb-12 font-['Montserrat',_serif]">NAME</h1>
+      <h1 class="text-3xl font-bold mb-12 font-['Montserrat',_serif]">LOOM</h1>
 
       <ul class="space-y-2.5 mb-10 text-sm font-['Montserrat',_serif]">
         <li class="flex items-center gap-1 "><span> <x-heroicon-o-archive-box class="w-5 h-5"
@@ -46,10 +53,15 @@
       <!-- List folders -->
       <ul class="space-y-3 font-['Montserrat',_serif]">
         @foreach ($folders->whereNull('parent_id') as $folder)
-          <li x-data="{ openChild: false, open: true }" class="space-y-1">
+          <li x-data="{
+              openChild: false,
+              open: true,
+              openRename: false,
+              openMenu: false
+          }" class="space-y-1">
 
             <!-- FOLDER PADRE -->
-            <div class="flex items-center justify-between group px-2 py-1 rounded hover:bg-gray-100">
+            <div class="flex items-center justify-between group px-2  rounded-lg hover:bg-gray-100">
 
               <div @click="open = !open" class="flex items-center space-x-1 cursor-pointer select-none">
 
@@ -65,57 +77,52 @@
               <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition">
 
                 <!-- BOTÓN + -->
-                <button @click="openChild = true" class="text-gray-400 hover:text-black text-sm">
+                <button @click="openChild = true" class="text-gray-400 hover:text-black text-xl -mt-0.2">
                   +
                 </button>
 
-                <!-- DELETE -->
-                <div x-data="{ open: false }" class="relative">
+                <div class="relative">
 
-                  <!-- BOTÓN DELETE -->
-                  <button type="button" @click="open = true" class="text-gray-400 hover:text-red-500 text-sm">
-                    ✕
+                  <button type="button" @click="openMenu = !openMenu" class="text-gray-400 hover:text-black text-sm">
+                    ⋯
                   </button>
 
-                  <!-- MODAL -->
-                  <div x-show="open" x-cloak
-                    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 font-['Montserrat',_serif]">
+                  <!-- MINI MENU -->
+                  <div x-show="openMenu" @click.away="openMenu = false" x-cloak
+                    class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border z-50 translate-x-20">
 
-                    <div @click.away="open = false" class="bg-white p-5 rounded-xl shadow-lg w-80">
+                    <button class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2"
+                      @click="openMenu = false; openRename = true">
+                      <span> <x-heroicon-o-pencil class="w-4 h-4" style="stroke-width: 1" /></span>
+                      Rename
+                    </button>
 
-                      <h2 class="text-lg font-semibold mb-4">
-                        Are you sure?
-                      </h2>
+                    <button class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2"
+                      @click="openMenu = false; window.dispatchEvent(new CustomEvent('open-resource-modal', {
+                      detail: {
+                      folderId: {{ $folder->id }},
+                      folderName: '{{ $folder->name }}'
+                      }
+                      }))
+                      ">
+                      <span> <x-heroicon-o-paper-clip class="w-4 h-4" style="stroke-width: 1" /></span>
+                      Add resource
+                    </button>
 
-                      <p class="text-sm text-gray-500 mb-6">
-                        This folder and all resources will be permanently removed.
-                      </p>
+                    <hr>
 
-                      <div class="flex justify-end gap-3">
+                    <button
+                      class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 flex items-center gap-2"
+                      @click="openMenu = false; $dispatch('open-delete', {{ $folder->id }})">
+                      <span> <x-heroicon-o-trash class="w-4 h-4" style="stroke-width: 1" /></span>
+                      Delete
+                    </button>
 
-                        <!-- CANCEL -->
-                        <button type="button" @click="open = false"
-                          class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">
-                          Cancel
-                        </button>
-
-                        <!-- DELETE FORM -->
-                        <form action="{{ route('folders.destroy', $folder) }}" method="POST">
-                          @csrf
-                          @method('DELETE')
-
-                          <button type="submit" class="px-3 py-1 bg-black text-white rounded hover:bg-red-600">
-                            Delete
-                          </button>
-                        </form>
-
-                      </div>
-                    </div>
                   </div>
-
                 </div>
 
               </div>
+
             </div>
 
             <!-- INPUT HIJO -->
@@ -152,11 +159,39 @@
         @endforeach
       </ul>
 
+      <x-delete-folder-modal />
+      <x-resource-modal :folders="$folders" />
     </aside>
 
     <!-- CENTER DASHBOARD -->
-    <main class="flex-1 p-6 flex items-center justify-center text-gray-300">
-      <div class="flex flex-col items-center">
+    <main class="flex-1 flex flex-col text-gray-300">
+      <!-- HEADER DEL DASHBOARD -->
+      <div class="px-6 pt-8 pb-4  flex items-center justify-between">
+
+        <!-- IZQUIERDA -->
+        <div class="flex items-center gap-2 ml-4">
+          <span class="text-gray-400 cursor-pointer"><x-heroicon-o-chevron-left class="w-5 h-5"
+              style="stroke-width: 2" /></span>
+          <span class="text-gray-400 cursor-pointer"><x-heroicon-o-chevron-right class="w-5 h-5"
+              style="stroke-width: 2" /></span>
+
+          <h2 class="text-sm text-black">
+            Carpeta
+          </h2>
+        </div>
+
+        <!-- DERECHA -->
+        <div class="flex items-center gap-4 mr-12">
+          <x-heroicon-o-magnifying-glass class="w-5 h-5 text-gray-400" />
+          <x-heroicon-o-adjustments-horizontal class="w-5 h-5 text-gray-400" />
+
+          <input type="text" placeholder="Search..."
+            class="border border-gray-100 rounded-lg px-3 py-1.5 text-sm focus:outline-none bg-gray-100">
+        </div>
+
+      </div>
+      <!-- SVG -->
+      <div class="flex-1 flex flex-col items-center justify-center -ml-10">
         <x-heroicon-o-folder-plus class="w-32 h-32" style="stroke-width: 0.6" />
         <p class="text-sm font-['Montserrat',_serif]">Create new folder</p>
       </div>
