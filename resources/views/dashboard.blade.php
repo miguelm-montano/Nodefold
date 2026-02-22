@@ -209,20 +209,17 @@
             </p>
           </div>
         @else
-          <div class="columns-4 gap-6 space-y-6">
+          <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
 
             @foreach ($resources as $resource)
-              <div class="break-inside-avoid bg-white rounded-xl shadow-sm border p-4 hover:shadow-md transition">
+              @if ($resource->image_path)
+                <div class="break-inside-avoid mb-6">
 
-                <h3 class="text-sm font-semibold text-black mb-2">
-                  {{ $resource->title }}
-                </h3>
+                  <img src="{{ asset('storage/' . $resource->image_path) }}"
+                    class="w-full rounded-2xl object-cover hover:scale-[1.02] transition duration-200">
 
-                <p class="text-xs text-gray-500">
-                  {{ $resource->type }}
-                </p>
-
-              </div>
+                </div>
+              @endif
             @endforeach
 
           </div>

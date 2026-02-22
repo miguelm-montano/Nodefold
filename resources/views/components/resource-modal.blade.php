@@ -31,8 +31,9 @@
         <div x-data="{ hasFile: false, fileName: '' }"
           class="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center bg-gray-50 hover:bg-gray-100 transition">
 
-          <input type="file" name="file" id="fileInput" class="hidden"
-            @change="hasFile = true; fileName = $event.target.files[0]?.name" accept="image/*,.ttf,.otf,.woff,.woff2">
+          <input type="file" name="image" id="fileInput" class="hidden"
+            @change="hasFile = true; fileName = $event.target.files[0]?.name"
+            accept="image/*,.ttf,.otf,.woff,.woff2,.jpge">
 
           <label for="fileInput" class="cursor-pointer block">
 

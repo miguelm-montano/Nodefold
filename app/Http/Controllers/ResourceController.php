@@ -42,15 +42,23 @@ class ResourceController extends Controller
             'description' => 'nullable|string|max:400',
             'url' => 'nullable|url|max:500',
             'folder_id' => 'nullable|exists:folders,id',
-            'tags' => 'nullable|string'
+            'tags' => 'nullable|string',
+            'image' => 'nullable|image|max:10240'
         ]);
+
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('resources', 'public');
+        }
 
         $resource = Auth::user()->resources()->create([
             'title' => $validated['title'],
             'type' => $validated['type'],
             'description' => $validated['description'] ?? null,
             'url' => $validated['url'] ?? null,
-            'folder_id' => $validated['folder_id'] ?? null
+            'folder_id' => $validated['folder_id'] ?? null,
+            'image_path' => $imagePath,
         ]);
 
         if(!empty($validated['tags'])) {
@@ -66,7 +74,9 @@ class ResourceController extends Controller
                 }
             }
         }
-        return redirect()->back();
+        return redirect()->route('dashboard', [
+            'folder' => $validated['folder_id']
+        ]);
     }
 
     /**

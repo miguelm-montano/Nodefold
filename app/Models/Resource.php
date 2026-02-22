@@ -15,6 +15,7 @@ class Resource extends Model {
         'url',
         'file_path',
         'thumbnail',
+        'image_path'
     ];
 
     public function user() {
