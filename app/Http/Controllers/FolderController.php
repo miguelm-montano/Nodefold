@@ -8,11 +8,21 @@ use Illuminate\Support\Facades\Auth;
 
 class FolderController extends Controller {
 
-    public function index() {
+    public function index(Request $request) {
         
-        $folders = Auth::user()->folders;
+        $user = Auth::user();
+        $folders = $user->folders;
 
-        return view('dashboard', compact('folders'));
+        if($request->has('folder')) {
+            $folderId = $request->get('folder');
+            $resources = $user->resources()->where('folder_id', $folderId)
+            ->with(['folder', 'tags'])->get();
+            $selectedFolder = Folder::find($folderId);
+        } else {
+            $resources = $user->resources()->with(['folder', 'tags'])->get();
+            $selectedFolder = null;
+        }
+        return view ('dashboard', compact('folders', 'resources', 'selectedFolder'));
     }
 
     /**
