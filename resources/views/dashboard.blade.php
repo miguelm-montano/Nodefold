@@ -63,16 +63,15 @@
             <!-- FOLDER PADRE -->
             <div class="flex items-center justify-between group px-2  rounded-lg hover:bg-gray-100">
 
-              <div @click="open = !open" class="flex items-center space-x-1 cursor-pointer select-none">
+              <a href="{{ route('dashboard', ['folder' => $folder->id]) }}"
+                class="flex items-center space-x-1 cursor-pointer select-none flex-1">
 
-                <!-- Flecha -->
-                <span class="text-xs transition-transform duration-200" :class="{ 'rotate-90': open }">
-
+                <span>
+                  <x-heroicon-o-folder-open class="w-5 h-5 -mt-0.5" style="stroke-width: 1" />
                 </span>
 
-                <span><x-heroicon-o-folder-open class="w-5 h-5 -mt-0.5" style="stroke-width: 1" /></span>
                 <span class="text-sm">{{ $folder->name }}</span>
-              </div>
+              </a>
 
               <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition">
 
@@ -140,11 +139,19 @@
             <div x-show="open">
               @foreach ($folder->children as $child)
                 <div class="ml-6 flex items-center justify-between py-1 text-sm hover:bg-gray-100 rounded group">
-                  <div class="flex items-center space-x-1">
-                    <span><x-heroicon-o-folder class="w-5 h-5 -mt-0.5 ml-3" style="stroke-width: 1" /></span>
-                    <span>{{ $child->name }}</span>
-                  </div>
 
+                  <!-- IZQUIERDA CLICKEABLE -->
+                  <a href="{{ route('dashboard', ['folder' => $child->id]) }}"
+                    class="flex items-center space-x-1 flex-1">
+
+                    <span>
+                      <x-heroicon-o-folder class="w-5 h-5 -mt-0.5 ml-3" style="stroke-width: 1" />
+                    </span>
+
+                    <span>{{ $child->name }}</span>
+                  </a>
+
+                  <!-- BOTÓN DELETE -->
                   <form action="{{ route('folders.destroy', $child) }}" method="POST">
                     @csrf
                     @method('DELETE')
@@ -152,6 +159,7 @@
                       ✕
                     </button>
                   </form>
+
                 </div>
               @endforeach
             </div>
@@ -176,7 +184,7 @@
               style="stroke-width: 2" /></span>
 
           <h2 class="text-sm text-black">
-            Carpeta
+            {{ $selectedFolder->name ?? 'All resources' }}
           </h2>
         </div>
 
@@ -191,9 +199,36 @@
 
       </div>
       <!-- SVG -->
-      <div class="flex-1 flex flex-col items-center justify-center -ml-10">
-        <x-heroicon-o-folder-plus class="w-32 h-32" style="stroke-width: 0.6" />
-        <p class="text-sm font-['Montserrat',_serif]">Create new folder</p>
+      <div class="flex-1 p-8 overflow-y-auto">
+
+        @if ($resources->isEmpty())
+          <div class="flex flex-col items-center justify-center h-full text-gray-400">
+            <x-heroicon-o-folder-plus class="w-24 h-24 mb-4" style="stroke-width: 0.6" />
+            <p class="text-sm font-['Montserrat',_serif]">
+              No resources yet
+            </p>
+          </div>
+        @else
+          <div class="columns-4 gap-6 space-y-6">
+
+            @foreach ($resources as $resource)
+              <div class="break-inside-avoid bg-white rounded-xl shadow-sm border p-4 hover:shadow-md transition">
+
+                <h3 class="text-sm font-semibold text-black mb-2">
+                  {{ $resource->title }}
+                </h3>
+
+                <p class="text-xs text-gray-500">
+                  {{ $resource->type }}
+                </p>
+
+              </div>
+            @endforeach
+
+          </div>
+
+        @endif
+
       </div>
     </main>
 
