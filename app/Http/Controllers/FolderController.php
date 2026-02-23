@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Folder;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -124,11 +125,29 @@ class FolderController extends Controller {
     public function destroy(Folder $folder) {
 
         if ($folder->user_id !== auth()->id()) {
-        abort(403);
-    }
-
+            abort(403);
+        }
+    
+        // Borrar archivos del storage
+        foreach ($folder->resources as $resource) {
+            if ($resource->image_path) {
+                Storage::delete($resource->image_path);
+            }
+        $resource->delete();
+        }
+    
+        // Borrar recursos de carpetas hijas
+        foreach ($folder->children as $child) {
+            foreach ($child->resources as $resource) {
+                    if ($resource->image_path) {
+                    Storage::delete($resource->image_path);
+                }
+                $resource->delete();
+            }
+            $child->delete();
+        }
+    
         $folder->delete();
-
-        return redirect()->back();
+        return redirect()->route('dashboard');
     }
 }

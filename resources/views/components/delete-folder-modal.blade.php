@@ -1,20 +1,35 @@
 <div x-show="showDeleteModal" x-cloak
   class="fixed inset-0 flex items-center justify-center z-50 font-['Montserrat',_serif]">
+
   <!-- Overlay -->
   <div class="absolute inset-0 bg-black/50" @click="showDeleteModal = false"></div>
 
   <!-- Modal -->
   <div class="relative bg-white px-16 py-6 rounded-xl shadow-lg flex flex-col items-center text-center">
 
-    <span>
-      <x-heroicon-o-trash class="w-14 h-14 mb-5 text-red-500" style="stroke-width: 1" />
-    </span>
-    <h2 class="text font-semibold ">
-      You want to delete this folder?
+    <!-- ICONO DINÁMICO -->
+    <template x-if="deleteType === 'folder'">
+      <x-heroicon-o-trash class="w-14 h-14 mb-5 text-red-500" />
+    </template>
+
+    <template x-if="deleteType === 'resource'">
+      <x-heroicon-o-archive-box-x-mark class="w-14 h-14 mb-5 text-red-500" />
+    </template>
+
+    <!-- TITULO DINÁMICO -->
+    <h2 class="font-semibold">
+      You want to delete this
+      <span x-text="deleteType"></span>?
     </h2>
 
-    <p class="text-sma text-gray-500 mb-6">
-      This folder and all resources will<br>be permanently removed.
+    <!-- TEXTO DINÁMICO -->
+    <p class="text-sm text-gray-500 mb-6">
+      <template x-if="deleteType === 'folder'">
+        <span>This folder and all resources will be permanently removed.</span>
+      </template>
+      <template x-if="deleteType === 'resource'">
+        <span>This resource will be permanently removed.</span>
+      </template>
     </p>
 
     <div class="flex justify-end gap-2">
@@ -25,10 +40,14 @@
         Cancel
       </button>
 
-      <!-- Delete -->
-      <form method="POST" :action="`/folders/${selectedFolder}`">
+      <!-- FORM DINÁMICO -->
+      <form method="POST"
+        :action="deleteType === 'folder'
+            ?
+            `/folders/${selectedFolder}` :
+            `/resources/${selectedResourceId}`">
         @csrf
-        @method('DELETE')
+        <input type="hidden" name="_method" value="DELETE">
 
         <button type="submit" class="px-5 py-1 bg-black text-white hover:bg-red-600 rounded-3xl">
           Delete
@@ -36,6 +55,5 @@
       </form>
 
     </div>
-
   </div>
 </div>
