@@ -5,7 +5,7 @@
     </h2>
   </x-slot>
 
-  <div class="flex h-[80vh]">
+  <div x-data class="flex h-screen overflow-hidden">
 
     <!-- LEFT BAR -->
     <aside x-data="{
@@ -15,9 +15,9 @@
       @open-delete.window="
         selectedFolder = $event.detail;
         showDeleteModal = true"
-      class="w-64 h-screen border-r p-8 flex flex-col">
+      class="w-64 border-r p-8 flex flex-col">
 
-      <h1 class="text-3xl font-bold mb-12 font-['Montserrat',_serif]">LOOM</h1>
+      <h1 class="text-3xl font-bold mb-12 font-['Montserrat',_serif]">NAME</h1>
 
       <ul class="space-y-2.5 mb-10 text-sm font-['Montserrat',_serif]">
         <li class="flex items-center gap-1 "><span> <x-heroicon-o-archive-box class="w-5 h-5"
@@ -114,7 +114,7 @@
                       class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 flex items-center gap-2"
                       @click="openMenu = false; $dispatch('open-delete', {{ $folder->id }})">
                       <span> <x-heroicon-o-trash class="w-4 h-4" style="stroke-width: 1" /></span>
-                      Delete
+                      Delete folder
                     </button>
 
                   </div>
@@ -177,20 +177,30 @@
       <div class="px-6 pt-8 pb-4  flex items-center justify-between">
 
         <!-- IZQUIERDA -->
-        <div class="flex items-center gap-2 ml-4">
+        <div class="flex items-center gap-2 ml-0.5">
           <span class="text-gray-400 cursor-pointer"><x-heroicon-o-chevron-left class="w-5 h-5"
               style="stroke-width: 2" /></span>
           <span class="text-gray-400 cursor-pointer"><x-heroicon-o-chevron-right class="w-5 h-5"
               style="stroke-width: 2" /></span>
 
-          <h2 class="text-sm text-black">
+          <h2 class="text-sm text-black font-['Montserrat',_serif]">
             {{ $selectedFolder->name ?? 'All resources' }}
           </h2>
         </div>
 
         <!-- DERECHA -->
-        <div class="flex items-center gap-4 mr-12">
-          <x-heroicon-o-magnifying-glass class="w-5 h-5 text-gray-400" />
+        <div class="flex items-center gap-4 mr-7">
+          <button
+            onclick="window.dispatchEvent(
+        new CustomEvent('open-resource-modal', {
+            detail: {
+                folderId: {{ request('folder') ?? 'null' }},
+                folderName: '{{ optional($folders->firstWhere('id', request('folder')))->name ?? '' }}'
+            }
+        })
+    )">
+            <x-heroicon-o-plus class="w-5 h-5 text-gray-400" />
+          </button>
           <x-heroicon-o-adjustments-horizontal class="w-5 h-5 text-gray-400" />
 
           <input type="text" placeholder="Search..."
@@ -209,21 +219,18 @@
             </p>
           </div>
         @else
-          <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-
+          <div id="grid-masonry" style="position: relative;">
             @foreach ($resources as $resource)
               @if ($resource->image_path)
-                <div class="break-inside-avoid mb-6">
-
-                  <img src="{{ asset('storage/' . $resource->image_path) }}"
-                    class="w-full rounded-2xl object-cover hover:scale-[1.02] transition duration-200">
-
+                <div class="grid-item" style="width: 24%; margin-bottom: 16px;">
+                  <div class="relative transition duration-300 ease-out hover:scale-[1.02] transform-gpu">
+                    <img src="{{ asset('storage/' . $resource->image_path) }}"
+                      class="w-full object-cover block rounded-lg">
+                  </div>
                 </div>
               @endif
             @endforeach
-
           </div>
-
         @endif
 
       </div>

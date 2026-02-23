@@ -15,7 +15,7 @@
   <div
     class="relative bg-white w-[520px] p-6 rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto font-['Montserrat',_serif]">
 
-    <h2 class="text-lg font-semibold -mb-1">
+    <h2 class="text-lg font-semibold">
       Upload your idea
     </h2>
     <p class="mb-4 text-sm text-gray-500">
@@ -200,11 +200,11 @@
 
         <!-- DESCRIPTION -->
         <textarea name="description" placeholder="Description (optional)"
-          class="w-full border rounded-lg p-3 text-sm h-15 border-gray-200"></textarea>
+          class="w-full border rounded-lg p-2 text-sm h-15 border-gray-200"></textarea>
 
         <!-- TAGS -->
         <input type="text" name="tags" placeholder="modern, free, minimalist"
-          class="w-full border rounded-lg p-3 text-sm border-gray-200">
+          class="w-full border rounded-lg p-2 text-sm border-gray-200">
       </div>
 
       <!-- BUTTONS -->
