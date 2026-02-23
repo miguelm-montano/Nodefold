@@ -1,7 +1,19 @@
-import './bootstrap';
+import "./bootstrap";
+import Alpine from "alpinejs";
+window.Alpine = Alpine;
+Alpine.start();
 
-import Alpine from 'alpinejs'
+import Masonry from "masonry-layout";
+window.Masonry = Masonry;
 
-window.Alpine = Alpine
-
-Alpine.start()
+document.addEventListener("DOMContentLoaded", function () {
+    const grid = document.querySelector("#grid-masonry");
+    if (grid) {
+        new Masonry(grid, {
+            itemSelector: ".grid-item",
+            columnWidth: ".grid-item",
+            percentPosition: true,
+            gutter: 16,
+        });
+    }
+});

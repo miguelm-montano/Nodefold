@@ -15,7 +15,7 @@
   <div
     class="relative bg-white w-[520px] p-6 rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto font-['Montserrat',_serif]">
 
-    <h2 class="text-lg font-semibold -mb-1">
+    <h2 class="text-lg font-semibold">
       Upload your idea
     </h2>
     <p class="mb-4 text-sm text-gray-500">
@@ -31,8 +31,9 @@
         <div x-data="{ hasFile: false, fileName: '' }"
           class="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center bg-gray-50 hover:bg-gray-100 transition">
 
-          <input type="file" name="file" id="fileInput" class="hidden"
-            @change="hasFile = true; fileName = $event.target.files[0]?.name" accept="image/*,.ttf,.otf,.woff,.woff2">
+          <input type="file" name="image" id="fileInput" class="hidden"
+            @change="hasFile = true; fileName = $event.target.files[0]?.name"
+            accept="image/*,.ttf,.otf,.woff,.woff2,.jpge">
 
           <label for="fileInput" class="cursor-pointer block">
 
@@ -199,11 +200,11 @@
 
         <!-- DESCRIPTION -->
         <textarea name="description" placeholder="Description (optional)"
-          class="w-full border rounded-lg p-3 text-sm h-15 border-gray-200"></textarea>
+          class="w-full border rounded-lg p-2 text-sm h-15 border-gray-200"></textarea>
 
         <!-- TAGS -->
         <input type="text" name="tags" placeholder="modern, free, minimalist"
-          class="w-full border rounded-lg p-3 text-sm border-gray-200">
+          class="w-full border rounded-lg p-2 text-sm border-gray-200">
       </div>
 
       <!-- BUTTONS -->
