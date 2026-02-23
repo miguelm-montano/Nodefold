@@ -152,13 +152,10 @@
                   </a>
 
                   <!-- BOTÓN DELETE -->
-                  <form action="{{ route('folders.destroy', $child) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button class="opacity-0 group-hover:opacity-40 transition-opacity duration-200 mr-2">
-                      ✕
-                    </button>
-                  </form>
+                  <button class="opacity-0 group-hover:opacity-40 transition-opacity duration-200 mr-2"
+                    @click="$dispatch('open-delete', {{ $child->id }})">
+                    ✕
+                  </button>
 
                 </div>
               @endforeach
