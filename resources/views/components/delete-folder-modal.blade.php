@@ -2,32 +2,34 @@
   class="fixed inset-0 flex items-center justify-center z-50 font-['Montserrat',_serif]">
 
   <!-- Overlay -->
-  <div class="absolute inset-0 bg-black/50" @click="showDeleteModal = false"></div>
+  <div class="absolute inset-0 bg-black/50" @click="showDeleteModal = false">
+  </div>
 
   <!-- Modal -->
   <div class="relative bg-white px-16 py-6 rounded-xl shadow-lg flex flex-col items-center text-center">
 
     <!-- ICONO DINÁMICO -->
-    <template x-if="deleteType === 'folder'">
+    <template x-if="deleteTarget?.type === 'folder'">
       <x-heroicon-o-trash class="w-14 h-14 mb-5 text-red-500" />
     </template>
 
-    <template x-if="deleteType === 'resource'">
+    <template x-if="deleteTarget?.type === 'resource'">
       <x-heroicon-o-archive-box-x-mark class="w-14 h-14 mb-5 text-red-500" />
     </template>
 
-    <!-- TITULO DINÁMICO -->
+    <!-- TITULO -->
     <h2 class="font-semibold">
       You want to delete this
-      <span x-text="deleteType"></span>?
+      <span x-text="deleteTarget?.type"></span>?
     </h2>
 
-    <!-- TEXTO DINÁMICO -->
+    <!-- MENSAJE -->
     <p class="text-sm text-gray-500 mb-6">
-      <template x-if="deleteType === 'folder'">
+      <template x-if="deleteTarget?.type === 'folder'">
         <span>This folder and all resources will be permanently removed.</span>
       </template>
-      <template x-if="deleteType === 'resource'">
+
+      <template x-if="deleteTarget?.type === 'resource'">
         <span>This resource will be permanently removed.</span>
       </template>
     </p>
@@ -41,13 +43,14 @@
       </button>
 
       <!-- FORM DINÁMICO -->
-      <form method="POST"
-        :action="deleteType === 'folder'
-            ?
-            `/folders/${selectedFolder}` :
-            `/resources/${selectedResourceId}`">
+      <form x-show="deleteTarget"
+        :action="deleteTarget.type === 'resource' ?
+            `/resources/${deleteTarget.id}` :
+            `/folders/${deleteTarget.id}`"
+        method="POST">
+
         @csrf
-        <input type="hidden" name="_method" value="DELETE">
+        @method('DELETE')
 
         <button type="submit" class="px-5 py-1 bg-black text-white hover:bg-red-600 rounded-3xl">
           Delete
