@@ -137,7 +137,9 @@ class ResourceController extends Controller
             }
         }
     }
-        return redirect()->back();
+                return response()->json(
+            $resource->load('tags')
+        );
     }
 
     /**

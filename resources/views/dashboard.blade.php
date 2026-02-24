@@ -16,17 +16,11 @@
         editResource: {},
         openDeleteModal(type, id) {
           this.deleteType = type
-          if (type === 'folder') {
-            this.selectedFolder = id
-          }
-          if (type === 'resource') {
-            this.selectedResourceId = id
-          }
+          if (type === 'folder') this.selectedFolder = id
+          if (type === 'resource') this.selectedResourceId = id
           this.showDeleteModal = true
         },
         async saveResource() {
-          console.log('selectedResource completo:', this.selectedResource)
-
           const payload = {
             title: this.editResource.title,
             type: this.editResource.type,
@@ -35,8 +29,8 @@
             folder_id: this.editResource.folder_id ?? null,
             tags: this.editResource.tags ?? ''
           };
-
-          console.log('payload', payload);
+          console.log('payload:', payload);
+          console.log('resource id:', this.editResource.id);
 
           const response = await fetch(`/resources/${this.editResource.id}`, {
             method: 'PATCH',
@@ -45,8 +39,12 @@
               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
               'Accept': 'application/json'
             },
+            credentials: 'same-origin',
             body: JSON.stringify(payload)
           });
+
+          console.log('response.status:', response.status);
+          console.log('response.url:', response.url);
 
           if (response.ok) {
             const updated = await response.json();
@@ -273,16 +271,16 @@
               @if ($resource->image_path)
                 <div class="grid-item" style="width: 24%; margin-bottom: 16px;"
                   @click="selectedResource = {
-                    id: {{ $resource->id }},
-                    image: '{{ asset('storage/' . $resource->image_path) }}',
-                    title: '{{ $resource->title }}',
-                    type: '{{ $resource->type }}',
-                    description: '{{ $resource->description }}',
-                    url: {{ json_encode($resource->url) }},
-                    folder: '{{ optional($resource->folder)->name }}',
-                    folder_id: {{ $resource->folder_id ?? 'null' }},
-                    tags: {{ json_encode($resource->tags->pluck('name')) }}
-                }">
+    id: {{ $resource->id }},
+    image: '{{ asset('storage/' . $resource->image_path) }}',
+    title: '{{ $resource->title }}',
+    type: '{{ $resource->type }}',
+    description: '{{ $resource->description }}',
+    url: {{ json_encode($resource->url) }},
+    folder: '{{ optional($resource->folder)->name }}',
+    folder_id: {{ $resource->folder_id ?? 'null' }},
+    tags: {{ json_encode($resource->tags->pluck('name')) }}
+}">
                   <div class="relative transition duration-300 ease-out hover:scale-[1.02] transform-gpu">
                     <img src="{{ asset('storage/' . $resource->image_path) }}"
                       class="w-full object-cover block rounded-lg">
