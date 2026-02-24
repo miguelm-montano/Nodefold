@@ -121,23 +121,19 @@ class ResourceController extends Controller
             'folder_id' => $validated['folder_id'] ?? null
         ]);
 
-        if (isset($validated['tags'])) {
-        
-        $resource->tags()->detach();
-        
-       
-        $tagNames = explode(',', $validated['tags']);
-        
-        foreach ($tagNames as $tagName) {
-            $tagName = trim(strtolower($tagName));
-            
-            if (!empty($tagName)) {
-                $tag = Tag::firstOrCreate(['name' => $tagName]);
-                $resource->tags()->attach($tag->id);
-            }
-        }
-    }
-        return redirect()->back();
+        $tagNames = collect(explode(',', $request->input('tags', '')))
+            ->map(fn ($tag) => trim(strtolower($tag)))
+            ->filter()
+            ->unique();
+
+        $tagIds = $tagNames->map(function ($name) {
+            return Tag::firstOrCreate(['name' => $name])->id;
+        });
+
+        $resource->tags()->sync($tagIds);
+            return response()->json(
+            $resource->load('tags')
+        );
     }
 
     /**

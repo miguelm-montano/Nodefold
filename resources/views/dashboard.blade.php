@@ -4,18 +4,107 @@
       Dashboard
     </h2>
   </x-slot>
+  <script>
+    function dashboardData() {
+      return {
 
-  <div x-data class="flex h-screen overflow-hidden">
+        // STATE
+        selectedResource: null,
+        showDeleteModal: false,
+        deleteTarget: null,
+        selectedFolder: null,
+
+        editing: false,
+        editResource: {},
+        errors: {},
+
+        // DELETE
+        openDeleteModal(type, id) {
+          this.deleteTarget = {
+            type,
+            id
+          };
+          this.showDeleteModal = true;
+        },
+
+        // EDIT MODE
+        startEditing() {
+          if (!this.selectedResource) return;
+
+          this.editing = true;
+
+          this.editResource = {
+            ...this.selectedResource,
+            tags: this.selectedResource?.tags?.join(', ') ?? ''
+          };
+        },
+
+        cancelEditing() {
+          this.editing = false;
+          this.editResource = {};
+        },
+
+        // SAVE RESOURCE
+        async saveResource() {
+
+          if (!this.editResource?.id) return;
+
+          try {
+
+            const payload = {
+              title: this.editResource.title,
+              type: this.editResource.type,
+              description: this.editResource.description || null,
+              url: this.editResource.url || null,
+              folder_id: this.editResource.folder_id || null,
+              tags: this.editResource.tags || ''
+            };
+
+            const response = await fetch(`/resources/${this.editResource.id}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+              },
+              credentials: 'same-origin',
+              body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+
+              if (errorData.errors) {
+                this.errors = errorData.errors;
+              }
+
+              return;
+            }
+
+            const updated = await response.json();
+
+            this.selectedResource.title = updated.title;
+            this.selectedResource.description = updated.description;
+            this.selectedResource.url = updated.url;
+            this.selectedResource.folder = updated.folder?.name ?? null;
+            this.selectedResource.folder_id = updated.folder_id;
+            this.selectedResource.tags = updated.tags.map(t => t.name);
+
+            this.editing = false;
+
+          } catch (error) {
+            console.error('Save error:', error);
+          }
+        }
+
+      }
+    }
+  </script>
+
+  <div x-data="dashboardData()" class="flex h-screen overflow-hidden">
 
     <!-- LEFT BAR -->
-    <aside x-data="{
-        showDeleteModal: false,
-        selectedFolder: null
-    }"
-      @open-delete.window="
-        selectedFolder = $event.detail;
-        showDeleteModal = true"
-      class="w-64 border-r p-8 flex flex-col">
+    <aside class="w-64 border-r p-8 flex flex-col">
 
       <h1 class="text-3xl font-bold mb-12 font-['Montserrat',_serif]">NAME</h1>
 
@@ -112,8 +201,8 @@
 
                     <button
                       class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 flex items-center gap-2"
-                      @click="openMenu = false; $dispatch('open-delete', {{ $folder->id }})">
-                      <span> <x-heroicon-o-trash class="w-4 h-4" style="stroke-width: 1" /></span>
+                      @click="openMenu = false; openDeleteModal('folder', {{ $folder->id }})">
+                      <span><x-heroicon-o-trash class="w-4 h-4" style="stroke-width: 1" /></span>
                       Delete folder
                     </button>
 
@@ -153,7 +242,7 @@
 
                   <!-- BOTÓN DELETE -->
                   <button class="opacity-0 group-hover:opacity-40 transition-opacity duration-200 mr-2"
-                    @click="$dispatch('open-delete', {{ $child->id }})">
+                    @click.stop="openDeleteModal('folder', {{ $child->id }})">
                     ✕
                   </button>
 
@@ -219,7 +308,18 @@
           <div id="grid-masonry" style="position: relative;">
             @foreach ($resources as $resource)
               @if ($resource->image_path)
-                <div class="grid-item" style="width: 24%; margin-bottom: 16px;">
+                <div class="grid-item" style="width: 24%; margin-bottom: 16px;"
+                  @click="selectedResource = {
+    id: {{ $resource->id }},
+    image: '{{ asset('storage/' . $resource->image_path) }}',
+    title: '{{ $resource->title }}',
+    type: '{{ $resource->type }}',
+    description: '{{ $resource->description }}',
+    url: {{ json_encode($resource->url) }},
+    folder: '{{ optional($resource->folder)->name }}',
+    folder_id: {{ $resource->folder_id ?? 'null' }},
+    tags: {{ json_encode($resource->tags->pluck('name')) }}
+}">
                   <div class="relative transition duration-300 ease-out hover:scale-[1.02] transform-gpu">
                     <img src="{{ asset('storage/' . $resource->image_path) }}"
                       class="w-full object-cover block rounded-lg">
@@ -234,9 +334,7 @@
     </main>
 
     <!-- RIGHT BAR -->
-    <aside class="w-72 border-l p-4 hidden">
-      <!-- Detalles del recurso seleccionado -->
-    </aside>
+    @include('dashboard.partials.right-sidebar')
 
   </div>
 </x-app-layout>
