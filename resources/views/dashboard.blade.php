@@ -7,57 +7,96 @@
   <script>
     function dashboardData() {
       return {
+
+        // STATE
         selectedResource: null,
-        selectedResourceId: null,
         showDeleteModal: false,
-        deleteType: null,
+        deleteTarget: null,
         selectedFolder: null,
+
         editing: false,
         editResource: {},
+        errors: {},
+
+        // DELETE
         openDeleteModal(type, id) {
-          this.deleteType = type
-          if (type === 'folder') this.selectedFolder = id
-          if (type === 'resource') this.selectedResourceId = id
-          this.showDeleteModal = true
-        },
-        async saveResource() {
-          const payload = {
-            title: this.editResource.title,
-            type: this.editResource.type,
-            description: this.editResource.description ?? null,
-            url: this.editResource.url || null,
-            folder_id: this.editResource.folder_id ?? null,
-            tags: this.editResource.tags ?? ''
+          this.deleteTarget = {
+            type,
+            id
           };
-          console.log('payload:', payload);
-          console.log('resource id:', this.editResource.id);
+          this.showDeleteModal = true;
+        },
 
-          const response = await fetch(`/resources/${this.editResource.id}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-              'Accept': 'application/json'
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify(payload)
-          });
+        // EDIT MODE
+        startEditing() {
+          if (!this.selectedResource) return;
 
-          console.log('response.status:', response.status);
-          console.log('response.url:', response.url);
+          this.editing = true;
 
-          if (response.ok) {
-            const updated = await response.json();
-            this.selectedResource = {
-              ...updated,
-              tags: updated.tags.map(t => t.name)
+          this.editResource = {
+            ...this.selectedResource,
+            tags: this.selectedResource?.tags?.join(', ') ?? ''
+          };
+        },
+
+        cancelEditing() {
+          this.editing = false;
+          this.editResource = {};
+        },
+
+        // SAVE RESOURCE
+        async saveResource() {
+
+          if (!this.editResource?.id) return;
+
+          try {
+
+            const payload = {
+              title: this.editResource.title,
+              type: this.editResource.type,
+              description: this.editResource.description || null,
+              url: this.editResource.url || null,
+              folder_id: this.editResource.folder_id || null,
+              tags: this.editResource.tags || ''
             };
+
+            const response = await fetch(`/resources/${this.editResource.id}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+              },
+              credentials: 'same-origin',
+              body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+
+              if (errorData.errors) {
+                this.errors = errorData.errors;
+              }
+
+              return;
+            }
+
+            const updated = await response.json();
+
+            this.selectedResource.title = updated.title;
+            this.selectedResource.description = updated.description;
+            this.selectedResource.url = updated.url;
+            this.selectedResource.folder = updated.folder?.name ?? null;
+            this.selectedResource.folder_id = updated.folder_id;
+            this.selectedResource.tags = updated.tags.map(t => t.name);
+
             this.editing = false;
-          } else {
-            const errors = await response.json();
-            console.log('Validation errors:', errors);
+
+          } catch (error) {
+            console.error('Save error:', error);
           }
         }
+
       }
     }
   </script>
