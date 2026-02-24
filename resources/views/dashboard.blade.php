@@ -4,28 +4,67 @@
       Dashboard
     </h2>
   </x-slot>
-
-  <div x-data="{
-      selectedResource: null,
-      selectedResourceId: null,
-      showDeleteModal: false,
-      deleteType: null,
-      selectedFolder: null,
-  
-      openDeleteModal(type, id) {
+  <script>
+    function dashboardData() {
+      return {
+        selectedResource: null,
+        selectedResourceId: null,
+        showDeleteModal: false,
+        deleteType: null,
+        selectedFolder: null,
+        editing: false,
+        editResource: {},
+        openDeleteModal(type, id) {
           this.deleteType = type
-  
           if (type === 'folder') {
-              this.selectedFolder = id
+            this.selectedFolder = id
           }
-  
           if (type === 'resource') {
-              this.selectedResourceId = id
+            this.selectedResourceId = id
           }
-  
           this.showDeleteModal = true
+        },
+        async saveResource() {
+          console.log('selectedResource completo:', this.selectedResource)
+
+          const payload = {
+            title: this.editResource.title,
+            type: this.editResource.type,
+            description: this.editResource.description ?? null,
+            url: this.editResource.url || null,
+            folder_id: this.editResource.folder_id ?? null,
+            tags: this.editResource.tags ?? ''
+          };
+
+          console.log('payload', payload);
+
+          const response = await fetch(`/resources/${this.editResource.id}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (response.ok) {
+            const updated = await response.json();
+            this.selectedResource = {
+              ...updated,
+              tags: updated.tags.map(t => t.name)
+            };
+            this.editing = false;
+          } else {
+            const errors = await response.json();
+            console.log('Validation errors:', errors);
+          }
+        }
       }
-  }" class="flex h-screen overflow-hidden">
+    }
+  </script>
+
+  <div x-data="dashboardData()" class="flex h-screen overflow-hidden">
 
     <!-- LEFT BAR -->
     <aside class="w-64 border-r p-8 flex flex-col">
@@ -237,10 +276,13 @@
                     id: {{ $resource->id }},
                     image: '{{ asset('storage/' . $resource->image_path) }}',
                     title: '{{ $resource->title }}',
+                    type: '{{ $resource->type }}',
                     description: '{{ $resource->description }}',
-                    link: '{{ $resource->link }}',
-                    folder: '{{ optional($resource->folder)->name }}'
-                  }">
+                    url: {{ json_encode($resource->url) }},
+                    folder: '{{ optional($resource->folder)->name }}',
+                    folder_id: {{ $resource->folder_id ?? 'null' }},
+                    tags: {{ json_encode($resource->tags->pluck('name')) }}
+                }">
                   <div class="relative transition duration-300 ease-out hover:scale-[1.02] transform-gpu">
                     <img src="{{ asset('storage/' . $resource->image_path) }}"
                       class="w-full object-cover block rounded-lg">
@@ -255,97 +297,7 @@
     </main>
 
     <!-- RIGHT BAR -->
-    <aside x-show="selectedResource" x-cloak
-      class="w-72 border-l p-6 mt-4 flex flex-col gap-4 overflow-y-auto font-['Montserrat',_serif]">
-
-      <!-- CERRAR -->
-      <div class="flex justify-end">
-        <button @click="selectedResource = null">
-          <x-heroicon-o-x-mark class="w-5 h-5 text-black" style="stroke-width: 2" />
-        </button>
-      </div>
-
-      <!-- IMAGEN -->
-      <img :src="selectedResource?.image" class="w-full rounded-lg object-cover mt-9">
-
-      <!-- TÍTULO -->
-      <div class="border-t">
-        <p class="text-xs mb-1 font-['Montserrat',_serif] font-semibold mt-3">Title</p>
-        <p class="text-sm text-black" x-text="selectedResource?.title"></p>
-      </div>
-
-      <!-- DESCRIPTION -->
-      <div>
-        <p class="text-xs mb-1 font-['Montserrat',_serif] font-semibold">
-          Description
-        </p>
-
-        <!-- WITH DESCRIPTION -->
-        <template x-if="selectedResource?.description && selectedResource.description.trim() !== ''">
-          <p class="text-sm text-black" x-text="selectedResource.description">
-          </p>
-        </template>
-
-        <!-- WITHOUT -->
-        <template x-if="!selectedResource?.description || selectedResource.description.trim() === ''">
-          <p class="text-sm text-gray-400 italic">
-            No description available
-          </p>
-        </template>
-      </div>
-
-      <!-- LINK -->
-      <div>
-        <p class="text-xs mb-1 mt-1 font-['Montserrat',_serif] font-semibold">Link</p>
-
-        <template x-if="selectedResource?.link">
-          <a :href="selectedResource.link" target="_blank" class="text-sm text-blue-500 underline"
-            x-text="selectedResource.link">
-          </a>
-        </template>
-
-        <template x-if="!selectedResource?.link">
-          <p class="text-sm text-gray-400 italic">No link available</p>
-        </template>
-      </div>
-
-      <!-- TAGS -->
-      <div>
-        <p class="text-xs mb-2 font-['Montserrat',_serif] font-semibold">Tags</p>
-
-        <div class="flex flex-wrap gap-2">
-          <template x-for="tag in selectedResource?.tags" :key="tag">
-            <span class="px-2 py-1 text-xs bg-gray-200 rounded-full text-gray-700" x-text="tag">
-            </span>
-          </template>
-
-          <template x-if="!selectedResource?.tags || selectedResource.tags.length === 0">
-            <p class="text-sm text-gray-400 italic">No tags</p>
-          </template>
-        </div>
-      </div>
-
-      <!-- FOLDER -->
-      <div>
-        <p class="flex items-center gap-1 text-xs mb-2 font-['Montserrat',_serif] font-semibold">
-          <x-heroicon-o-folder class="w-4 h-4 -mt-0.5" style="stroke-width: 1" />
-          <span>Folder</span>
-        </p>
-
-        <p class="text-sm text-black" x-text="selectedResource?.folder"></p>
-      </div>
-
-      <!-- DELETE BUTTON -->
-      <div class="mt-6 flex justify-center">
-        <button
-          class="flex items-center gap-2 px-5 py-2.5 bg-black hover:bg-red-600 text-white text-sm font-medium rounded-3xl transition duration-200 shadow-sm hover:shadow-md"
-          @click="openDeleteModal('resource', selectedResource.id)">
-          <x-heroicon-o-trash class="w-5 h-5" />
-          Delete
-        </button>
-      </div>
-
-    </aside>
+    @include('dashboard.partials.right-sidebar')
 
   </div>
 </x-app-layout>
