@@ -2,13 +2,34 @@
 
       <h1 class="text-3xl font-bold mb-12 px-2 font-['Montserrat',_serif]">NAME</h1>
 
-      <ul class="space-y-2.5 px-2 mb-10 text-sm font-['Montserrat',_serif]">
-        <li class="flex items-center gap-1 "><span> <x-heroicon-o-archive-box class="w-5 h-5"
-              style="stroke-width: 1" /></span> All</li>
-        <li class="flex items-center gap-1 "><span> <x-heroicon-o-bookmark-slash class="w-5 h-5 -mt-0.5"
-              style="stroke-width: 1" /></span>Untagged</li>
-        <li class="flex items-center gap-1"><span> <x-heroicon-o-bookmark class="w-5 h-5 -mt-0.5"
-              style="stroke-width: 1" /></span>All tags</li>
+      <ul class="space-y-3 px-2 mb-10 text-sm font-['Montserrat',_serif]">
+        <li>
+          <a href="{{ route('dashboard', ['filter' => 'all']) }}" class="flex items-center justify-between gap-1">
+            <span class="flex items-center gap-1">
+              <x-heroicon-o-archive-box class="w-5 h-5" style="stroke-width: 1" />
+              All
+            </span>
+            <span class="text-xs text-gray-400">{{ $allCount }}</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ route('dashboard', ['filter' => 'untagged']) }}" class="flex items-center justify-between gap-1">
+            <span class="flex items-center gap-1">
+              <x-heroicon-o-bookmark-slash class="w-5 h-5 -mt-0.5" style="stroke-width: 1" />
+              Untagged
+            </span>
+            <span class="text-xs text-gray-400">{{ $untaggedCount }}</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ route('dashboard', ['filter' => 'tagged']) }}" class="flex items-center justify-between gap-1">
+            <span class="flex items-center gap-1">
+              <x-heroicon-o-bookmark class="w-5 h-5 -mt-0.5" style="stroke-width: 1" />
+              All tags
+            </span>
+            <span class="text-xs text-gray-400">{{ $taggedCount }}</span>
+          </a>
+        </li>
       </ul>
 
       <!-- FOLDERS SECTION -->
