@@ -49,8 +49,8 @@
       </button>
       <x-heroicon-o-adjustments-horizontal class="w-5 h-5 text-gray-400" />
 
-      <input type="text" placeholder="Search..."
-        class="border border-gray-100 rounded-lg px-3 py-1.5 text-sm focus:outline-none bg-gray-100">
+      <input type="text" x-model="search" placeholder="Search..."
+        class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-black focus:outline-none bg-gray-200">
     </div>
 
   </div>
@@ -69,6 +69,9 @@
         @foreach ($resources as $resource)
           @if ($resource->image_path)
             <div class="grid-item" style="width: 24%; margin-bottom: 16px;"
+              x-show="!search.trim() || 
+              '{{ strtolower($resource->title) }}'.includes(search.toLowerCase()) || 
+                {{ json_encode($resource->tags->pluck('name')) }}.some(t => t.toLowerCase().includes(search.toLowerCase()))"
               @click="selectedResource = {
                     id: {{ $resource->id }},
                     image: '{{ asset('storage/' . $resource->image_path) }}',
