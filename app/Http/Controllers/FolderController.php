@@ -9,32 +9,61 @@ use Illuminate\Support\Facades\Auth;
 
 class FolderController extends Controller {
 
-    public function index(Request $request) {
-    
+   public function index(Request $request) {
+
     $user = Auth::user();
-    $folders = $user->folders;
+    $folders = $user->folders()->with(['children' => function($q) {
+        $q->withCount('resources');
+    }])->withCount('resources')->get();
+    $filter = $request->query('filter');
 
-    if ($request->has('folder')) {
+    // Contadores
+    $allCount = $user->resources()->count();
+    $untaggedCount = $user->resources()->doesntHave('tags')->count();
+    $taggedCount = $user->resources()->has('tags')->count();
 
+    if ($filter === 'untagged') {
+        $resources = $user->resources()
+            ->doesntHave('tags')
+            ->with(['folder', 'tags'])
+            ->get();
+        $selectedFolder = null;
+
+    } elseif ($filter === 'tagged') {
+        $resources = $user->resources()
+            ->has('tags')
+            ->with(['folder', 'tags'])
+            ->get();
+        $selectedFolder = null;
+
+    } elseif ($filter === 'all') {
+        $resources = $user->resources()
+            ->with(['folder', 'tags'])
+            ->get();
+        $selectedFolder = null;
+
+    } elseif ($request->has('folder')) {
         $folderId = $request->get('folder');
-
         $selectedFolder = Folder::where('id', $folderId)
             ->where('user_id', $user->id)
             ->firstOrFail();
 
-        //Parent Folder
+        // Parent folder
         if ($selectedFolder->parent_id === null) {
-
             $childIds = Folder::where('parent_id', $folderId)
                 ->where('user_id', $user->id)
                 ->pluck('id');
 
             $resources = $user->resources()
                 ->where(function ($query) use ($folderId, $childIds) {
-                    $query->where('folder_id', $folderId)->orWhereIn('folder_id', $childIds);
-                })->with(['folder', 'tags'])->get();
+                    $query->where('folder_id', $folderId)
+                          ->orWhereIn('folder_id', $childIds);
+                })
+                ->with(['folder', 'tags'])
+                ->get();
+
         } else {
-            //Child folder resources
+            // Child folder
             $resources = $user->resources()
                 ->where('folder_id', $folderId)
                 ->with(['folder', 'tags'])
@@ -42,16 +71,14 @@ class FolderController extends Controller {
         }
 
     } else {
-
         $resources = $user->resources()
             ->whereNull('folder_id')
             ->with(['folder', 'tags'])
             ->get();
-
         $selectedFolder = null;
     }
 
-        return view('dashboard', compact('folders', 'resources', 'selectedFolder'));
+        return view('dashboard', compact('folders', 'resources', 'selectedFolder', 'allCount', 'untaggedCount', 'taggedCount'));
     }
 
     /**
@@ -104,19 +131,17 @@ class FolderController extends Controller {
      */
     public function update(Request $request, Folder $folder) {
 
-        if($folder->user_id !== Auth::id()) {
+        if ($folder->user_id !== Auth::id()) {
             abort(403, 'Not Authorized');
         }
 
-        $validate = $request->validated([
+        $validated = $request->validate([
             'name' => 'required|string|max:50'
         ]);
 
-        $folder->update([
-            'name' => $validate['name']
-        ]);
+        $folder->update(['name' => $validated['name']]);
 
-        return redirect()->back();
+        return response()->json(['success' => true]);
     }
 
     /**
