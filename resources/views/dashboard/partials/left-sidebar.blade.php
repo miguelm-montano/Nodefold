@@ -45,21 +45,51 @@
               openChild: false,
               open: true,
               openRename: false,
-              openMenu: false
+              openMenu: false,
+              editing: false,
+              name: @js($folder->name),
+          
+              saveRename() {
+                  if (this.name.trim() === '') return;
+          
+                  fetch('/folders/{{ $folder->id }}', {
+                      method: 'PUT',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                      },
+                      body: JSON.stringify({ name: this.name })
+                  });
+          
+                  this.editing = false;
+              },
+          
+              cancelRename() {
+                  this.name = @js($folder->name);
+                  this.editing = false;
+              }
           }" class="space-y-1">
 
             <!-- FOLDER PADRE -->
-            <div class="flex items-center justify-between group px-2  rounded-lg hover:bg-gray-100">
+            <div class="flex items-center justify-between group px-2 rounded-lg hover:bg-gray-100">
 
-              <a href="{{ route('dashboard', ['folder' => $folder->id]) }}"
-                class="flex items-center space-x-1 cursor-pointer select-none flex-1">
+              <!-- IZQUIERDA -->
+              <div class="flex items-center space-x-1 flex-1">
 
                 <span>
                   <x-heroicon-o-folder-open class="w-5 h-5 -mt-0.5" style="stroke-width: 1" />
                 </span>
 
-                <span class="text-sm">{{ $folder->name }}</span>
-              </a>
+                <!-- MODO NORMAL -->
+                <span x-show="!editing" x-text="name" class="text-sm cursor-pointer"
+                  @click="$event.preventDefault(); window.location.href='{{ route('dashboard', ['folder' => $folder->id]) }}'">
+                </span>
+
+                <!-- MODO EDICIÓN -->
+                <input x-show="editing" x-ref="renameInput" x-model="name" @keydown.enter.prevent="saveRename()"
+                  @keydown.escape="cancelRename()" @blur="saveRename()"
+                  class="text-sm border rounded px-2 py-1 w-full bg-white" />
+              </div>
 
               <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition">
 
@@ -79,8 +109,9 @@
                     class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border z-50 translate-x-20">
 
                     <button class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2"
-                      @click="openMenu = false; openRename = true">
-                      <span> <x-heroicon-o-pencil class="w-4 h-4" style="stroke-width: 1" /></span>
+                      @click="openMenu = false; editing = true; $nextTick(() => $refs.renameInput.focus())">
+
+                      <x-heroicon-o-pencil class="w-4 h-4" style="stroke-width: 1" />
                       Rename
                     </button>
 
