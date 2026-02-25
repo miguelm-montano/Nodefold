@@ -78,7 +78,18 @@ class FolderController extends Controller {
         $selectedFolder = null;
     }
 
-        return view('dashboard', compact('folders', 'resources', 'selectedFolder', 'allCount', 'untaggedCount', 'taggedCount'));
+        $prevFolder = null;
+        $nextFolder = null;
+
+        if ($selectedFolder) {
+            $allFolders = $folders->flatMap(fn($f) => collect([$f])->merge($f->children));
+            $index = $allFolders->search(fn($f) => $f->id === $selectedFolder->id);
+            $prevFolder = $index > 0 ? $allFolders->get($index - 1) : null;
+            $nextFolder = $allFolders->get($index + 1);
+        }
+        
+
+            return view('dashboard', compact('folders', 'resources', 'selectedFolder', 'allCount', 'untaggedCount', 'taggedCount', 'prevFolder', 'nextFolder'));
     }
 
     /**
