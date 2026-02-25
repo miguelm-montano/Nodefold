@@ -1,4 +1,4 @@
-    <aside class="w-64 border-r py-8 px-6 flex flex-col">
+    <aside class="w-64 border-r py-8 px-6 flex flex-col h-screen">
 
       <h1 class="text-3xl font-bold mb-12 px-2 font-['Montserrat',_serif]">NAME</h1>
 
@@ -157,18 +157,50 @@
             <!-- HIJOS -->
             <div x-show="open">
               @foreach ($folder->children as $child)
-                <div class="ml-6 flex items-center justify-between py-1 text-sm hover:bg-gray-100 rounded group">
+                <div x-data="{
+                    editing: false,
+                    clickTimer: null,
+                    name: @js($child->name),
+                
+                    saveRename() {
+                        if (this.name.trim() === '') return;
+                        fetch('/folders/{{ $child->id }}', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ name: this.name })
+                        });
+                        this.editing = false;
+                    },
+                
+                    cancelRename() {
+                        this.name = @js($child->name);
+                        this.editing = false;
+                    }
+                }"
+                  class="ml-6 flex items-center justify-between py-1 text-sm hover:bg-gray-100 rounded group">
 
                   <!-- IZQUIERDA CLICKEABLE -->
-                  <a href="{{ route('dashboard', ['folder' => $child->id]) }}"
-                    class="flex items-center space-x-1 flex-1">
-
+                  <div class="flex items-center space-x-1 flex-1">
                     <span>
                       <x-heroicon-o-folder class="w-5 h-5 -mt-0.5 ml-3" style="stroke-width: 1" />
                     </span>
 
-                    <span>{{ $child->name }}</span>
-                  </a>
+                    <!-- MODO NORMAL -->
+                    <span x-show="!editing" x-text="name" class="text-sm cursor-pointer"
+                      @click.prevent="clearTimeout(clickTimer); clickTimer = setTimeout(() => {
+                      window.location.href='{{ route('dashboard', ['folder' => $child->id]) }}'}, 250)"
+                      @dblclick.prevent="clearTimeout(clickTimer); editing = true;
+                      $nextTick(() => $refs.childRenameInput.focus())">
+                    </span>
+
+                    <!-- MODO EDICIÓN -->
+                    <input x-show="editing" x-ref="childRenameInput" x-model="name"
+                      @keydown.enter.prevent="saveRename()" @keydown.escape="cancelRename()" @blur="saveRename()"
+                      class="text-sm border rounded px-2 py-1 w-full bg-white" />
+                  </div>
 
                   <!-- BOTÓN DELETE -->
                   <button class="opacity-0 group-hover:opacity-40 transition-opacity duration-200 mr-2"

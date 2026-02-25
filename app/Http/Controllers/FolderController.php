@@ -104,19 +104,17 @@ class FolderController extends Controller {
      */
     public function update(Request $request, Folder $folder) {
 
-        if($folder->user_id !== Auth::id()) {
+        if ($folder->user_id !== Auth::id()) {
             abort(403, 'Not Authorized');
         }
 
-        $validate = $request->validated([
+        $validated = $request->validate([
             'name' => 'required|string|max:50'
         ]);
 
-        $folder->update([
-            'name' => $validate['name']
-        ]);
+        $folder->update(['name' => $validated['name']]);
 
-        return redirect()->back();
+        return response()->json(['success' => true]);
     }
 
     /**
