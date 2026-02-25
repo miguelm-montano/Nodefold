@@ -12,7 +12,9 @@ class FolderController extends Controller {
    public function index(Request $request) {
 
     $user = Auth::user();
-    $folders = $user->folders()->with('children')->get();
+    $folders = $user->folders()->with(['children' => function($q) {
+        $q->withCount('resources');
+    }])->withCount('resources')->get();
     $filter = $request->query('filter');
 
     // Contadores

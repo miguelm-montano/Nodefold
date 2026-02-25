@@ -112,6 +112,7 @@
                   class="text-sm border rounded px-2 py-1 w-full bg-white" />
               </div>
 
+
               <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition">
 
                 <!-- BOTÓN + -->
@@ -161,6 +162,9 @@
                 </div>
 
               </div>
+              <span class="text-xs text-gray-400 group-hover:hidden">
+                {{ $folder->resources_count + $folder->children->sum('resources_count') }}
+              </span>
 
             </div>
 
