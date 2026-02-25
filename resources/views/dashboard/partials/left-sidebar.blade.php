@@ -1,8 +1,8 @@
-    <aside class="w-64 border-r p-8 flex flex-col">
+    <aside class="w-64 border-r py-8 px-6 flex flex-col">
 
-      <h1 class="text-3xl font-bold mb-12 font-['Montserrat',_serif]">NAME</h1>
+      <h1 class="text-3xl font-bold mb-12 px-2 font-['Montserrat',_serif]">NAME</h1>
 
-      <ul class="space-y-2.5 mb-10 text-sm font-['Montserrat',_serif]">
+      <ul class="space-y-2.5 px-2 mb-10 text-sm font-['Montserrat',_serif]">
         <li class="flex items-center gap-1 "><span> <x-heroicon-o-archive-box class="w-5 h-5"
               style="stroke-width: 1" /></span> All</li>
         <li class="flex items-center gap-1 "><span> <x-heroicon-o-bookmark-slash class="w-5 h-5 -mt-0.5"
@@ -12,25 +12,30 @@
       </ul>
 
       <!-- FOLDERS SECTION -->
-      <p class="text-gray-500 text-xs mb-2 font-['Montserrat',_serif]">Folders</p>
+      <p class="text-gray-500 text-xs mb-2 px-2 font-['Montserrat',_serif]">Folders</p>
 
       <!-- Create new folder -->
-      <div x-data="{ open: false }" class="mb-6 min-h-[2rem]">
+      <div x-data="folderCreator()" class="mb-6 min-h-[2rem] px-2">
 
-        <!-- BUTTON NEW FOLDER  -->
-        <button x-show="!open" @click="open = true; $nextTick(() => $refs.input.focus())"
-          class="text-sm text-gray-500 hover:text-black font-['Montserrat',_serif]">
+        <!-- BUTTON -->
+        <button x-show="!open" x-transition.opacity.duration.200ms @click="openForm()"
+          class="text-sm text-gray-500 hover:text-black transition font-['Montserrat',_serif]">
           + Create new folder
         </button>
 
-        <!-- Input -->
-        <form x-show="open" @submit="open = false" action="{{ route('folders.store') }}" method="POST" class="mt-2">
-          @csrf
+        <!-- FORM -->
+        <form x-show="open" x-transition.scale.origin.top.duration.150ms @submit.prevent="createFolder"
+          class="mt-2 space-y-1">
 
-          <input x-ref="input" type="text" name="name" placeholder="Folder name"
-            class="border rounded p-2 w-full text-sm" @keydown.escape="open = false" @blur="open = false" required>
+          <input x-ref="input" type="text" x-model="name" placeholder="Folder name"
+            class="border rounded-lg px-3 py-2 w-full text-sm focus:ring-1 focus:ring-black focus:outline-none transition"
+            @keydown.escape="closeForm">
+
+          <!-- ERROR -->
+          <p x-show="error" x-transition.opacity class="text-xs text-red-500" x-text="error">
+          </p>
+
         </form>
-
       </div>
 
       <!-- List folders -->
@@ -147,5 +152,31 @@
         @endforeach
       </ul>
 
+      <!-- Profile Section -->
+      <div class="mt-auto pt-3 border-t space-y-1 font-['Montserrat',_serif]">
+
+        <!-- PROFILE -->
+        <a href="{{ route('profile') }}"
+          class="w-full px-2 py-2 text-sm hover:bg-gray-100 rounded-lg flex items-center gap-2 transition">
+
+          <x-heroicon-s-user-circle class="w-6 h-6" />
+
+          <span>Profile</span>
+        </a>
+
+        <!-- LOGOUT -->
+        <form method="POST" action="{{ route('logout') }}">
+          @csrf
+
+          <button type="submit"
+            class="w-full px-2 py-2 text-sm hover:bg-gray-100 rounded-lg flex items-center gap-2 transition text-left">
+
+            <x-heroicon-o-arrow-left-on-rectangle class="w-6 h-6" style="stroke-width: 1" />
+
+            <span>Logout</span>
+          </button>
+        </form>
+
+      </div>
 
     </aside>
