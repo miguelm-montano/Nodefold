@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "alpinejs": "^3.15.8",
+        "imagesloaded": "^5.0.0",
         "masonry-layout": "^4.2.2"
     }
 }
