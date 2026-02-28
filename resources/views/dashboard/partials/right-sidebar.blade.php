@@ -10,7 +10,21 @@
 
       <!-- IMAGEN -->
       <div class="w-full aspect-[4/5] mt-9">
-        <img :src="selectedResource?.image" class="w-full h-full rounded-lg object-cover">
+        <template x-if="selectedResource?.type === 'web'">
+          <div class="w-full h-full bg-gray-100 rounded-lg flex flex-col items-center justify-center gap-3 p-4">
+            <img :src="`https://www.google.com/s2/favicons?domain=${new URL(selectedResource.url).hostname}&sz=64`"
+              class="w-10 h-10 rounded">
+            <p class="text-xs text-gray-400 text-center break-all" x-text="selectedResource.url"></p>
+            <a :href="selectedResource.url" target="_blank"
+              class="text-xs bg-black text-white px-4 py-2 rounded-3xl hover:bg-gray-800 transition">
+              Visit site
+            </a>
+          </div>
+        </template>
+
+        <template x-if="selectedResource?.type !== 'web'">
+          <img :src="selectedResource?.image" class="w-full h-full rounded-lg object-cover">
+        </template>
       </div>
 
       <!-- TÍTULO -->
