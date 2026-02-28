@@ -1,29 +1,35 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+  <div class="font-['Montserrat',_serif] min-h-screen grid grid-cols-2">
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    <livewire:profile.update-profile-information-form />
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    <livewire:profile.update-password-form />
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    <livewire:profile.delete-user-form />
-                </div>
-            </div>
-        </div>
+    <div class="bg-black flex items-start px-12 py-16">
+      <p class="text-white text-3xl font-bold">Nodefold</p>
     </div>
+
+    <div class="bg-white px-16 py-16 space-y-8 overflow-y-auto">
+
+      <div class="flex flex-row items-center justify-between">
+        <h1 class="text-3xl font-bold">Edit Your Profile</h1>
+        <a href="{{ route('dashboard') }}" wire:navigate>
+          <x-heroicon-o-arrow-left-on-rectangle class="w-6 h-6 hover:opacity-60 transition" style="stroke-width: 1" />
+        </a>
+      </div>
+
+
+      <!-- Profile Info -->
+      <div class="space-y-1 border-b pb-10">
+        <livewire:profile.update-profile-information-form />
+      </div>
+
+      <!-- Password -->
+      <div class="space-y-1 border-b pb-10">
+        <livewire:profile.update-password-form />
+      </div>
+
+      <!-- Delete -->
+      <div class="space-y-1">
+        <livewire:profile.delete-user-form />
+      </div>
+
+    </div>
+  </div>
 </x-app-layout>
