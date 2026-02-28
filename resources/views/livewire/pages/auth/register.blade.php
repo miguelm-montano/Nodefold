@@ -31,13 +31,13 @@ new #[Layout('layouts.guest')] class extends Component {
 
         Auth::login($user);
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('dashboard', absolute: false));
     }
 }; ?>
 
 <x-slot name="header">
   <p class="text-white font-medium text-3xl font-['Montserrat',_serif]">
-    Welcome to Name
+    Welcome to Nodefold
   </p>
   <p class="text-white text-sm opacity-80">
     Begin by creating an account
@@ -100,7 +100,7 @@ new #[Layout('layouts.guest')] class extends Component {
       </button>
 
       <!-- LOGIN LINK -->
-      <a href="{{ route('login') }}" wire:navigate class="text-sm text-gray-600 hover:text-gray-900 underline">
+      <a href="{{ route('login') }}" class="text-sm text-gray-600 hover:text-gray-900 underline">
         {{ __('Already registered?') }}
       </a>
 

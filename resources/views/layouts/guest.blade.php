@@ -6,7 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>{{ config('app.name', 'Laravel') }}</title>
+  <title>{{ config('app.name', 'Nodefold') }}</title>
+
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'><rect width='8' height='8' x='3' y='3' fill='black' rx='1.5' ry='1.5'/><rect width='8' height='8' x='13' y='3' fill='black' rx='1.5' ry='1.5'/><rect width='8' height='8' x='3' y='13' fill='black' rx='1.5' ry='1.5'/><rect width='8' height='8' x='13' y='13' fill='black' rx='1.5' ry='1.5'/></svg>">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,6 +19,7 @@
 
   <!-- Scripts -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
+  @livewireStyles
 
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.3/dist/dotlottie-wc.js" type="module"></script>
 </head>
@@ -43,6 +47,7 @@
       {{ $slot }}
     </div>
   </div>
+  @livewireScripts
 </body>
 
 </html>

@@ -19,13 +19,13 @@ new #[Layout('layouts.guest')] class extends Component {
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('dashboard'));
     }
 }; ?>
 
 <x-slot name="header">
   <p class="text-white font-medium text-3xl font-['Montserrat',_serif]">
-    Welcome to Name
+    Welcome to Nodefold
   </p>
 </x-slot>
 
