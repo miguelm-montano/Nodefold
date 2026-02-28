@@ -124,7 +124,8 @@
       <div class="w-full grid grid-cols-5 gap-4">
 
         <!-- CARD 1 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm">
+        <div
+          class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm transition-transform duration-300 ease-in-out hover:scale-105">
           <div class="flex flex-col gap-2">
             <x-heroicon-o-plus class="w-5 h-5" style="stroke-width: 1.5" />
             <p class="text-sm">Create new folder</p>
@@ -133,7 +134,8 @@
         </div>
 
         <!-- CARD 2 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm">
+        <div
+          class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm transition-transform duration-300 ease-in-out hover:scale-105">
           <div class="flex flex-col gap-2">
             <div class="flex flex-row gap-2">
               <x-heroicon-o-folder-open class="w-5 h-5" style="stroke-width: 1.5" />
@@ -148,7 +150,8 @@
         </div>
 
         <!-- CARD 3 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm">
+        <div
+          class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm transition-transform duration-300 ease-in-out hover:scale-105">
           <div class="flex flex-col gap-2">
             <x-heroicon-o-pencil class="w-5 h-5" style="stroke-width: 1.5" />
             <p class="text-sm">Rename project</p>
@@ -157,7 +160,8 @@
         </div>
 
         <!-- CARD 4 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm">
+        <div
+          class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm transition-transform duration-300 ease-in-out hover:scale-105">
           <div class="flex flex-col gap-2">
             <x-heroicon-o-paper-clip class="w-5 h-5" style="stroke-width: 1.5" />
             <p class="text-sm">Add resource</p>
@@ -166,7 +170,8 @@
         </div>
 
         <!-- CARD 5 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm">
+        <div
+          class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm transition-transform duration-300 ease-in-out hover:scale-105">
           <div class="flex flex-col gap-2">
             <x-heroicon-o-magnifying-glass class="w-5 h-5" style="stroke-width: 1.5" />
             <p class="text-sm">Search</p>
@@ -221,28 +226,32 @@
         <!-- Card 1 -->
         <div class="flex flex-col items-center gap-3">
           <p class="font-semibold text-sm">Photos</p>
-          <img src="{{ asset('images/card-1.jpeg') }}" class="w-full h-72 object-cover rounded-2xl" />
+          <img src="{{ asset('images/card-1.jpeg') }}"
+            class="w-full h-72 object-cover rounded-2xl transition-transform duration-300 ease-in-out hover:scale-105" />
           <p class="text-sm text-center">Upload photos from your device</p>
         </div>
 
         <!-- Card 2 -->
         <div class="flex flex-col items-center gap-3">
           <p class="font-semibold text-sm">Web</p>
-          <img src="{{ asset('images/card-2.jpeg') }}" class="w-full , h-72 object-cover rounded-2xl" />
+          <img src="{{ asset('images/card-2.jpeg') }}"
+            class="w-full , h-72 object-cover rounded-2xl transition-transform duration-300 ease-in-out hover:scale-105" />
           <p class="text-sm text-center">Save the web pages you need</p>
         </div>
 
         <!-- Card 3 -->
         <div class="flex flex-col items-center gap-3">
           <p class="font-semibold text-sm">Fonts</p>
-          <img src="{{ asset('images/card-3.jpg') }}" class="w-full h-72 object-cover rounded-2xl" />
+          <img src="{{ asset('images/card-3.jpg') }}"
+            class="w-full h-72 object-cover rounded-2xl transition-transform duration-300 ease-in-out hover:scale-105" />
           <p class="text-sm text-center">Keep track of your favorite fonts</p>
         </div>
 
         <!-- Card 4 -->
         <div class="flex flex-col items-center gap-3">
           <p class="font-semibold text-sm">Others</p>
-          <img src="{{ asset('images/card-4.jpeg') }}" class="w-full h-72 object-cover rounded-2xl" />
+          <img src="{{ asset('images/card-4.jpeg') }}"
+            class="w-full h-72 object-cover rounded-2xl transition-transform duration-300 ease-in-out hover:scale-105" />
           <p class="text-sm text-center">Icons and color also have a place here</p>
         </div>
 
