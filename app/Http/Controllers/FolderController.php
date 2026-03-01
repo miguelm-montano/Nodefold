@@ -11,44 +11,59 @@ class FolderController extends Controller {
 
    public function index(Request $request) {
 
-    $user = Auth::user();
-    $folders = $user->folders()->with(['children' => function($q) {
-        $q->withCount('resources');
-    }])->withCount('resources')->get();
-    $filter = $request->query('filter');
+        $user = Auth::user();
 
-    // Contadores
-    $allCount = $user->resources()->count();
-    $untaggedCount = $user->resources()->doesntHave('tags')->count();
-    $taggedCount = $user->resources()->has('tags')->count();
-
-    if ($filter === 'untagged') {
-        $resources = $user->resources()
-            ->doesntHave('tags')
-            ->with(['folder', 'tags'])
+        $folders = $user->folders()
+            ->with(['children' => fn($q) => $q->withCount('resources')])
+            ->withCount('resources')
             ->get();
-        $selectedFolder = null;
 
-    } elseif ($filter === 'tagged') {
-        $resources = $user->resources()
-            ->has('tags')
-            ->with(['folder', 'tags'])
-            ->get();
-        $selectedFolder = null;
+        $counts = $this->getResourceCounts($user);
+        $filtered = $this->getFilteredResources($request, $user);
+        $navigation = $this->getFolderNavigation($folders, $filtered['selectedFolder']);
 
-    } elseif ($filter === 'all') {
-        $resources = $user->resources()
-            ->with(['folder', 'tags'])
-            ->get();
-        $selectedFolder = null;
+        return view('dashboard', array_merge(
+            $counts,
+            $filtered,
+            $navigation,
+            ['folders' => $folders]
+        ));
+    }
 
-    } elseif ($request->has('folder')) {
+    public function getResourceCounts($user) {
+
+        return [
+            'allCount' => $user->resources()->count(),
+            'untaggedCount' => $user->resources()->doesntHave('tags')->count(),
+            'taggedCount' => $user->resources()->has('tags')->count()
+        ];
+    }
+
+    /**
+    * Returns the resources of a folder, including children if it is a parent folder.
+    *
+    * @param Request $request
+    * @param User $user
+    * @return array ['resources' => Collection, 'selectedFolder' => Folder|null]
+    */
+    private function getFolderResources($request, $user) {
+    
+        if (!$request->has('folder')) {
+            return [
+            'resources' => $user->resources()
+                    ->whereNull('folder_id')
+                    ->with(['folder', 'tags'])
+                    ->get(),
+                'selectedFolder' => null
+            ];
+        }
+
         $folderId = $request->get('folder');
+
         $selectedFolder = Folder::where('id', $folderId)
             ->where('user_id', $user->id)
             ->firstOrFail();
 
-        // Parent folder
         if ($selectedFolder->parent_id === null) {
             $childIds = Folder::where('parent_id', $folderId)
                 ->where('user_id', $user->id)
@@ -57,44 +72,80 @@ class FolderController extends Controller {
             $resources = $user->resources()
                 ->where(function ($query) use ($folderId, $childIds) {
                     $query->where('folder_id', $folderId)
-                          ->orWhereIn('folder_id', $childIds);
+                        ->orWhereIn('folder_id', $childIds);
                 })
                 ->with(['folder', 'tags'])
                 ->get();
-
         } else {
-            // Child folder
             $resources = $user->resources()
                 ->where('folder_id', $folderId)
                 ->with(['folder', 'tags'])
                 ->get();
         }
 
-    } else {
-        $resources = $user->resources()
-            ->whereNull('folder_id')
-            ->with(['folder', 'tags'])
-            ->get();
-        $selectedFolder = null;
+        return compact('resources', 'selectedFolder');
     }
 
-        $prevFolder = null;
-        $nextFolder = null;
+    private function getFilteredResources($request, $user) {
 
-        if ($selectedFolder) {
-            $allFolders = $folders->flatMap(fn($f) => collect([$f])->merge($f->children));
-            $index = $allFolders->search(fn($f) => $f->id === $selectedFolder->id);
-            $prevFolder = $index > 0 ? $allFolders->get($index - 1) : null;
-            $nextFolder = $allFolders->get($index + 1);
+        $filter = $request->query('filter');
+
+        if ($filter === 'untagged') {
+            return [
+                'resources' => $user->resources()
+                    ->doesntHave('tags')
+                    ->with(['folder', 'tags'])
+                    ->get(),
+                'selectedFolder' => null
+            ];
         }
-        
 
-            return view('dashboard', compact('folders', 'resources', 'selectedFolder', 'allCount', 'untaggedCount', 'taggedCount', 'prevFolder', 'nextFolder'));
+        if ($filter === 'tagged') {
+            return [
+                'resources' => $user->resources()
+                    ->has('tags')
+                    ->with(['folder', 'tags'])
+                    ->get(),
+                'selectedFolder' => null
+            ];
+        }
+
+        if ($filter === 'all') {
+            return [
+                'resources' => $user->resources()
+                    ->with(['folder', 'tags'])
+                    ->get(),
+                'selectedFolder' => null
+            ];
+        }
+
+        return $this->getFolderResources($request, $user);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
+    * Calculates the previous and next folders for navigation
+    * on the dashboard, based on the selected folder.
+    */ 
+    private function getFolderNavigation($folders, $selectedFolder) {
+
+        if (!$selectedFolder) {
+            return ['prevFolder' => null, 'nextFolder' => null];
+        }
+
+        $allFolders = $folders->flatMap(fn($f) =>
+            collect([$f])->merge($f->children)
+        );
+
+        $index = $allFolders->search(
+            fn($f) => $f->id === $selectedFolder->id
+        );
+
+        return [
+            'prevFolder' => $index > 0 ? $allFolders->get($index - 1) : null,
+            'nextFolder' => $allFolders->get($index + 1)
+        ];
+    }
+
     public function create()
     {
         //
