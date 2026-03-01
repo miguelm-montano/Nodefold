@@ -8,8 +8,10 @@
         </button>
       </div>
 
-      <!-- IMAGEN -->
+      <!-- PREVIEW -->
       <div class="w-full aspect-[4/5] mt-9">
+
+        <!-- WEB -->
         <template x-if="selectedResource?.type === 'web'">
           <div class="w-full h-full bg-gray-100 rounded-lg flex flex-col items-center justify-center gap-3 p-4">
             <img :src="`https://www.google.com/s2/favicons?domain=${new URL(selectedResource.url).hostname}&sz=64`"
@@ -22,9 +24,27 @@
           </div>
         </template>
 
-        <template x-if="selectedResource?.type !== 'web'">
+        <!-- FONT -->
+        <template x-if="selectedResource?.type === 'font'">
+          <div
+            class="w-full h-full bg-gray-50 border border-gray-100 rounded-lg flex flex-col items-center justify-center gap-4 p-6">
+            <p class="text-5xl text-black" :style="`font-family: '${selectedResource.fontName}', sans-serif`">Aa</p>
+            <p class="text-sm text-black text-center leading-relaxed"
+              :style="`font-family: '${selectedResource.fontName}', sans-serif`">
+              ABCDEFGHIJKLM<br>abcdefghijklm<br>0123456789
+            </p>
+            <a x-show="selectedResource.url" :href="selectedResource.url" target="_blank"
+              class="text-xs bg-black text-white px-4 py-2 rounded-3xl hover:bg-gray-800 transition mt-2">
+              View font
+            </a>
+          </div>
+        </template>
+
+        <!-- IMAGE (y resto de tipos) -->
+        <template x-if="selectedResource?.type !== 'web' && selectedResource?.type !== 'font'">
           <img :src="selectedResource?.image" class="w-full h-full rounded-lg object-cover">
         </template>
+
       </div>
 
       <!-- TÍTULO -->
@@ -77,8 +97,8 @@
           <!-- VIEW -->
           <div x-show="!editing">
             <div x-show="selectedResource?.url">
-              <a :href="selectedResource.url" target="_blank" class="text-sm text-blue-500 underline"
-                x-text="selectedResource.url">
+              <a :href="selectedResource.url" target="_blank"
+                class="block max-w-full text-sm text-blue-500 underline truncate" x-text="selectedResource.url">
               </a>
             </div>
 

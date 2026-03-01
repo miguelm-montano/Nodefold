@@ -54,6 +54,8 @@
     </div>
 
   </div>
+
+  <!-- CENTRAL GRID -->
   <!-- SVG -->
   <div class="flex-1 p-8 overflow-y-auto">
 
@@ -69,40 +71,26 @@
         @foreach ($resources as $resource)
           <div class="grid-item" style="width: 24%; margin-bottom: 16px;"
             x-show="!search.trim() || 
-    '{{ strtolower($resource->title) }}'.includes(search.toLowerCase()) || 
-    {{ json_encode($resource->tags->pluck('name')) }}.some(t => t.toLowerCase().includes(search.toLowerCase()))"
+                '{{ strtolower($resource->title) }}'.includes(search.toLowerCase()) || 
+                {{ json_encode($resource->tags->pluck('name')) }}.some(t => t.toLowerCase().includes(search.toLowerCase()))"
             @click="selectedResource = {
-      id: {{ $resource->id }},
-      image: '{{ $resource->image_path ? asset('storage/' . $resource->image_path) : '' }}',
-      title: '{{ $resource->title }}',
-      type: '{{ $resource->type }}',
-      description: '{{ $resource->description }}',
-      url: {{ json_encode($resource->url) }},
-      folder: '{{ optional($resource->folder)->name }}',
-      folder_id: {{ $resource->folder_id ?? 'null' }},
-      tags: {{ json_encode($resource->tags->pluck('name')) }}
-    }">
+                  id: {{ $resource->id }},
+                  image: '{{ $resource->image_path ? asset('storage/' . $resource->image_path) : '' }}',
+                  title: '{{ $resource->title }}',
+                  type: '{{ $resource->type }}',
+                  description: '{{ $resource->description }}',
+                  url: {{ json_encode($resource->url) }},
+                  folder: '{{ optional($resource->folder)->name }}',
+                  folder_id: {{ $resource->folder_id ?? 'null' }},
+                  tags: {{ json_encode($resource->tags->pluck('name')) }},
+                  fontName: '{{ $resource->type === 'font' && $resource->url ? (preg_match('/family=([^:&+|]+)/', $resource->url, $m) ? str_replace('+', ' ', $m[1]) : $resource->title) : '' }}',
 
-            @if ($resource->type === 'web')
-              <!-- TARJETA WEB -->
-              <div
-                class="relative bg-gray-100 rounded-lg p-4 flex flex-col gap-3 hover:bg-gray-200 transition cursor-pointer">
-                <div class="flex items-center gap-2">
-                  <img
-                    src="https://www.google.com/s2/favicons?domain={{ parse_url($resource->url, PHP_URL_HOST) }}&sz=32"
-                    class="w-5 h-5 rounded" onerror="this.style.display='none'">
-                  <x-heroicon-o-globe-alt class="w-5 h-5 text-gray-400 hidden favicon-fallback"
-                    style="stroke-width: 1" />
-                </div>
-                <p class="text-sm font-medium text-black leading-tight line-clamp-2">{{ $resource->title }}</p>
-                <p class="text-xs text-gray-400 truncate">{{ parse_url($resource->url, PHP_URL_HOST) }}</p>
-              </div>
-            @elseif ($resource->image_path)
-              <!-- TARJETA IMAGEN -->
-              <div class="relative transition duration-300 ease-out hover:scale-[1.02] transform-gpu">
-                <img src="{{ asset('storage/' . $resource->image_path) }}"
-                  class="w-full object-cover block rounded-lg">
-              </div>
+                }">
+
+            @if (view()->exists('dashboard.gridtypes.type-' . $resource->type))
+              @include('dashboard.gridtypes.type-' . $resource->type, ['resource' => $resource])
+            @else
+              @include('dashboard.gridtypes.type-image', ['resource' => $resource])
             @endif
 
           </div>

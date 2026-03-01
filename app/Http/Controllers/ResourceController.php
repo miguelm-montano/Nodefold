@@ -34,7 +34,7 @@ class ResourceController extends Controller {
             'title' => 'required|string|max:255',
             'type' => 'required|in:font,image,color_palette,icon,web',
             'description' => 'nullable|string|max:400',
-            'url' => 'nullable|url|max:500',
+            'url' => 'nullable|string|max:500',
             'folder_id' => 'nullable|exists:folders,id',
             'tags' => 'nullable|string',
             'image' => 'nullable|image|max:10240'
