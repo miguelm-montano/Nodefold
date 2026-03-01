@@ -32,4 +32,18 @@ class Resource extends Model {
 
         return $this->belongsToMany(Tag::class, 'resource_tag');
     }
+
+    public function syncTagsFromString(?string $tagsString): void {
+        
+        $tagNames = collect(explode(',', $tagsString ?? ''))
+            ->map(fn ($tag) => trim(strtolower($tag)))
+            ->filter()
+            ->unique();
+
+        $tagIds = $tagNames->map(fn ($name) =>
+            \App\Models\Tag::firstOrCreate(['name' => $name])->id
+        );
+
+        $this->tags()->sync($tagIds);
+    }
 }
