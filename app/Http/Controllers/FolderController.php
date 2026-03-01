@@ -92,6 +92,111 @@ class FolderController extends Controller {
             return view('dashboard', compact('folders', 'resources', 'selectedFolder', 'allCount', 'untaggedCount', 'taggedCount', 'prevFolder', 'nextFolder'));
     }
 
+    public function getResourceCounts($user) {
+
+        return [
+            'allCount' => $user->resources()->count(),
+            'untaggedCount' => $user->resources()->doesntHave('tags')->count(),
+            'taggedCount' => $user->resources()->has('tags')->count()
+        ];
+    }
+
+    private function getFolderResources($request, $user) {
+    
+        if (!$request->has('folder')) {
+            return [
+            'resources' => $user->resources()
+                    ->whereNull('folder_id')
+                    ->with(['folder', 'tags'])
+                    ->get(),
+                'selectedFolder' => null
+            ];
+        }
+
+        $folderId = $request->get('folder');
+
+        $selectedFolder = Folder::where('id', $folderId)
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+
+        if ($selectedFolder->parent_id === null) {
+            $childIds = Folder::where('parent_id', $folderId)
+                ->where('user_id', $user->id)
+                ->pluck('id');
+
+            $resources = $user->resources()
+                ->where(function ($query) use ($folderId, $childIds) {
+                    $query->where('folder_id', $folderId)
+                        ->orWhereIn('folder_id', $childIds);
+                })
+                ->with(['folder', 'tags'])
+                ->get();
+        } else {
+            $resources = $user->resources()
+                ->where('folder_id', $folderId)
+                ->with(['folder', 'tags'])
+                ->get();
+        }
+
+        return compact('resources', 'selectedFolder');
+    }
+
+    private function getFilteredResources($request, $user) {
+
+        $filter = $request->query('filter');
+
+        if ($filter === 'untagged') {
+            return [
+                'resources' => $user->resources()
+                    ->doesntHave('tags')
+                    ->with(['folder', 'tags'])
+                    ->get(),
+                'selectedFolder' => null
+            ];
+        }
+
+        if ($filter === 'tagged') {
+            return [
+                'resources' => $user->resources()
+                    ->has('tags')
+                    ->with(['folder', 'tags'])
+                    ->get(),
+                'selectedFolder' => null
+            ];
+        }
+
+        if ($filter === 'all') {
+            return [
+                'resources' => $user->resources()
+                    ->with(['folder', 'tags'])
+                    ->get(),
+                'selectedFolder' => null
+            ];
+        }
+
+        return $this->getFolderResources($request, $user);
+    }
+
+    private function getFolderNavigation($folders, $selectedFolder) {
+        
+        if (!$selectedFolder) {
+            return ['prevFolder' => null, 'nextFolder' => null];
+        }
+
+        $allFolders = $folders->flatMap(fn($f) =>
+            collect([$f])->merge($f->children)
+        );
+
+        $index = $allFolders->search(
+            fn($f) => $f->id === $selectedFolder->id
+        );
+
+        return [
+            'prevFolder' => $index > 0 ? $allFolders->get($index - 1) : null,
+            'nextFolder' => $allFolders->get($index + 1)
+        ];
+    }
+
     /**
      * Show the form for creating a new resource.
      */
