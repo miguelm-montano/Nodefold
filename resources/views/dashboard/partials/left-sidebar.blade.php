@@ -1,6 +1,6 @@
     <aside class="w-64 border-r py-8 px-6 flex flex-col h-screen">
 
-      <h1 class="text-3xl font-bold mb-12 px-2 font-['Montserrat',_serif]">Notefold</h1>
+      <h1 class="text-3xl font-bold mb-12 px-2 font-['Montserrat',_serif]">Nodefold</h1>
 
       <ul class="space-y-3 px-2 mb-10 text-sm font-['Montserrat',_serif]">
         <li>
