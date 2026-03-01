@@ -39,6 +39,13 @@ class FolderController extends Controller {
         ];
     }
 
+    /**
+    * Returns the resources of a folder, including children if it is a parent folder.
+    *
+    * @param Request $request
+    * @param User $user
+    * @return array ['resources' => Collection, 'selectedFolder' => Folder|null]
+    */
     private function getFolderResources($request, $user) {
     
         if (!$request->has('folder')) {
@@ -115,6 +122,10 @@ class FolderController extends Controller {
         return $this->getFolderResources($request, $user);
     }
 
+    /**
+    * Calculates the previous and next folders for navigation
+    * on the dashboard, based on the selected folder.
+    */ 
     private function getFolderNavigation($folders, $selectedFolder) {
 
         if (!$selectedFolder) {
