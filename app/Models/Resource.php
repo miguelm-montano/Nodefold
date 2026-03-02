@@ -15,7 +15,12 @@ class Resource extends Model {
         'url',
         'file_path',
         'thumbnail',
-        'image_path'
+        'image_path',
+        'color_data'
+    ];
+
+    protected $casts = [
+        'color_data' => 'array',
     ];
 
     public function user() {

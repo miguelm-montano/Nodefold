@@ -29,7 +29,7 @@
           <div
             class="w-full h-full bg-gray-50 border border-gray-100 rounded-lg flex flex-col items-center justify-center gap-4 p-6">
             <p class="text-5xl text-black" :style="`font-family: '${selectedResource.fontName}', sans-serif`">Aa</p>
-            <p class="text-sm text-black text-center leading-relaxed"
+            <p class="text-xl text-black text-center leading-relaxed"
               :style="`font-family: '${selectedResource.fontName}', sans-serif`">
               ABCDEFGHIJKLM<br>abcdefghijklm<br>0123456789
             </p>
@@ -40,8 +40,25 @@
           </div>
         </template>
 
+        <!-- COLOR PALETTE -->
+        <template x-if="selectedResource?.type === 'color_palette'">
+          <div class="w-full h-full rounded-lg overflow-hidden flex flex-col">
+
+            <!-- FRANJAS -->
+            <div class="flex w-full flex-1">
+              <template x-for="color in selectedResource.color_data" :key="color">
+                <div class="flex-1 h-full" :style="`background-color: #${color}`"></div>
+              </template>
+            </div>
+
+
+
+          </div>
+        </template>
+
         <!-- IMAGE (y resto de tipos) -->
-        <template x-if="selectedResource?.type !== 'web' && selectedResource?.type !== 'font'">
+        <template
+          x-if="selectedResource?.type !== 'web' && selectedResource?.type !== 'font' && selectedResource?.type !== 'color_palette'">
           <img :src="selectedResource?.image" class="w-full h-full rounded-lg object-cover">
         </template>
 
