@@ -45,7 +45,7 @@
             }
         })
     )">
-        <x-heroicon-o-plus class="w-5 h-5 text-gray-400" />
+        <x-heroicon-o-plus class="w-5 h-5 text-black" />
       </button>
       <x-heroicon-o-adjustments-horizontal class="w-5 h-5 text-gray-400" />
 
@@ -83,7 +83,8 @@
                   folder: '{{ optional($resource->folder)->name }}',
                   folder_id: {{ $resource->folder_id ?? 'null' }},
                   tags: {{ json_encode($resource->tags->pluck('name')) }},
-                  fontName: '{{ $resource->type === 'font' && $resource->url ? (preg_match('/family=([^:&+|]+)/', $resource->url, $m) ? str_replace('+', ' ', $m[1]) : $resource->title) : '' }}',
+                  fontName: '{{ $resource->type === 'font' && $resource->url ? (preg_match('/family=([^:|]+)/', $resource->url, $m) ? str_replace('+', ' ', $m[1]) : $resource->title) : '' }}',
+                  color_data: {{ json_encode($resource->color_data ?? []) }},
 
                 }">
 
