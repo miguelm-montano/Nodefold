@@ -43,6 +43,7 @@ class ResourceController extends Controller {
         $resource = Auth::user()->resources()->create([
             ...$validated,
             'image_path' => $this->handleImageUpload($request),
+            'color_data' => $this->extractColorsFromUrl($validated['type'], $validated['url'] ?? null),
         ]);
 
         $resource->syncTagsFromString($validated['tags'] ?? null);
@@ -56,6 +57,18 @@ class ResourceController extends Controller {
         
         if ($request->hasFile('image')) {
             return $request->file('image')->store('resources', 'public');
+        }
+
+        return null;
+    }
+
+    private function extractColorsFromUrl(?string $type, ?string $url): ?array {
+
+        if ($type !== 'color_palette' || empty($url)) return null;
+
+        if (preg_match('/coolors\.co\/(?:palette\/)?([a-f0-9-]+)/i', $url, $matches)) {
+            $colors = array_filter(explode('-', $matches[1]), fn($c) => strlen($c) === 6);
+            return array_values($colors);
         }
 
         return null;
@@ -87,7 +100,7 @@ class ResourceController extends Controller {
             'title' => 'required|string|max:255',
             'type' => 'required|in:font,image,color_palette,icon,web',
             'description' => 'nullable|string|max:400',
-            'url' => 'nullable|url|max:500',
+            'url' => 'nullable|string|max:500',
             'folder_id' => 'nullable|exists:folders,id',
             'tags' => 'nullable|string'
         ]);
