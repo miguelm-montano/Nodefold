@@ -95,7 +95,7 @@ new #[Layout('layouts.guest')] class extends Component {
 
       <!-- REGISTER BUTTON -->
       <button type="submit"
-        class="w-full bg-black hover:bg-gray-800 text-white py-2 mt-6 rounded-3xl transition duration-200 font-medium">
+        class="w-full bg-black hover:bg-gray-400 text-white py-2 mt-6 rounded-3xl transition duration-200 font-medium">
         {{ __('Register') }}
       </button>
 
