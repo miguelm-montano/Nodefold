@@ -50,15 +50,24 @@
                 <div class="flex-1 h-full" :style="`background-color: #${color}`"></div>
               </template>
             </div>
+          </div>
+        </template>
 
-
-
+        <!-- ICON -->
+        <template x-if="selectedResource?.type === 'icon'">
+          <div
+            class="w-full h-full bg-gray-50 border border-gray-100 rounded-lg flex flex-col items-center justify-center gap-4 p-6">
+            <img :src="selectedResource.url" class="w-24 h-24 object-contain">
+            <a :href="selectedResource.url" target="_blank"
+              class="text-xs bg-black text-white px-4 py-2 rounded-3xl hover:bg-gray-800 transition">
+              View icon
+            </a>
           </div>
         </template>
 
         <!-- IMAGE (y resto de tipos) -->
         <template
-          x-if="selectedResource?.type !== 'web' && selectedResource?.type !== 'font' && selectedResource?.type !== 'color_palette'">
+          x-if="selectedResource?.type !== 'web' && selectedResource?.type !== 'font' && selectedResource?.type !== 'color_palette' && selectedResource?.type !== 'icon'">
           <img :src="selectedResource?.image" class="w-full h-full rounded-lg object-cover">
         </template>
 
