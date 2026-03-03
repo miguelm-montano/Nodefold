@@ -36,7 +36,7 @@ new class extends Component {
   <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
   <button wire:click.prevent="deleteUser" wire:confirm="Are you sure you want to delete your account?"
-    class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition text-sm">
+    class="bg-red-600 text-white px-4 py-2 rounded-3xl font-bold hover:bg-red-700 transition text-sm">
     {{ __('Delete Account') }}
   </button>
 

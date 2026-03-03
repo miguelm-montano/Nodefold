@@ -66,7 +66,7 @@ new #[Layout('layouts.guest')] class extends Component {
 
       <!-- LOGIN BUTTON -->
       <button type="submit"
-        class="w-full bg-black hover:bg-gray-800 text-white py-2 rounded-3xl transition duration-200 font-medium">
+        class="w-full bg-black hover:bg-gray-400 text-white py-2 rounded-3xl transition duration-200 font-medium">
         {{ __('Log in') }}
       </button>
 
