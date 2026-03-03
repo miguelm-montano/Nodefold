@@ -1,7 +1,9 @@
 <x-app-layout>
   <div class="font-['Montserrat',_serif] min-h-screen grid grid-cols-2">
 
-    <div class="bg-black flex items-start px-12 py-16">
+    <div
+      class="sticky top-0 h-screen flex flex-col justify-start items-center px-12 py-16 bg-cover bg-center bg-no-repeat bg-black"
+      style="background-image: url('{{ asset('images/Edit-profile.png') }}'); background-size: 65%; background-position: center 55%;">
       <p class="text-white text-3xl font-bold">Nodefold</p>
     </div>
 
