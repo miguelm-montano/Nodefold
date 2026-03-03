@@ -102,11 +102,7 @@
 
             <!-- FONT -->
             <div class="px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
-              @click="selected = { 
-                id: 'font', 
-                name: 'Font', 
-                icon: `<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-width='1.5' d='M4 19L12 5l8 14M6.5 15h11'/></svg>` 
-            }; open = false">
+              @click="selected = { id: 'font', name: 'Font', icon: '' }; open = false">
               <x-heroicon-o-language class="w-4 h-4" />
               Font
             </div>
@@ -147,76 +143,74 @@
         </div>
 
         <!-- FOLDER SELECTOR -->
-        <div x-data="{ open: false, selected: null }" class="relative">
+        <div x-data="{ folderOpen: false, folder: null, folderError: false }" class="space-y-4">
 
-          <label class="text-xs font-medium text-gray-700 mb-2 block ml-1">
-            Choose the folder
-          </label>
+          <!-- CHOOSE FOLDER -->
+          <div class="relative">
+            <label class="text-xs font-medium text-gray-700 mb-2 block ml-1">
+              Choose the folder
+            </label>
 
-          <!-- BOTÓN SELECT -->
-          <button type="button" @click="open = !open"
-            class="w-full border rounded-lg p-3 text-sm flex items-center justify-between">
-            <span x-text="selected ? selected.name : 'No folder'"></span>
-            <x-heroicon-o-chevron-down class="w-4 h-4" />
-          </button>
+            <button type="button" @click="folderOpen = !folderOpen"
+              class="w-full border rounded-lg p-3 text-sm flex items-center justify-between"
+              :class="folderError ? 'border-red-400' : 'border-gray-200'">
+              <span :class="folderError ? 'text-red-500 text-xs' : 'text-gray-700'"
+                x-text="folderError ? 'You need to select a folder first' : (folder ? folder.name : 'No folder')">
+              </span>
+              <x-heroicon-o-chevron-down class="w-4 h-4" />
+            </button>
 
-          <!-- DROPDOWN -->
-          <div x-show="open" @click.away="open = false" x-cloak
-            class="absolute mt-1 w-full bg-white border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+            <div x-show="folderOpen" @click.away="folderOpen = false" x-cloak
+              class="absolute mt-1 w-full bg-white border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
 
-            <!-- No folder -->
-            <div class="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-              @click="selected = { id: '', name: 'No folder' }; open = false">
-              No folder
+              @foreach ($folders->whereNull('parent_id') as $parentFolder)
+                <div class="px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
+                  @click="folder = { id: {{ $parentFolder->id }}, name: '{{ $parentFolder->name }}' }; folderOpen = false; folderError = false">
+                  <x-heroicon-o-folder class="w-4 h-4" />
+                  {{ $parentFolder->name }}
+                </div>
+
+                @foreach ($parentFolder->children as $child)
+                  <div class="px-8 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
+                    @click="folder = { id: {{ $child->id }}, name: '{{ $child->name }}' }; folderOpen = false; folderError = false">
+                    <x-heroicon-o-folder class="w-4 h-4 text-gray-400" />
+                    {{ $child->name }}
+                  </div>
+                @endforeach
+              @endforeach
+
             </div>
 
-            @foreach ($folders->whereNull('parent_id') as $parentFolder)
-              <!-- PARENT -->
-              <div class="px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
-                @click="selected = { id: {{ $parentFolder->id }}, name: '{{ $parentFolder->name }}' }; open = false">
-                <x-heroicon-o-folder class="w-4 h-4" />
-                {{ $parentFolder->name }}
-              </div>
-
-              <!-- CHILDREN -->
-              @foreach ($parentFolder->children as $child)
-                <div class="px-8 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
-                  @click="selected = { id: {{ $child->id }}, name: '{{ $child->name }}' }; open = false">
-                  <x-heroicon-o-folder class="w-4 h-4 text-gray-400" />
-                  {{ $child->name }}
-                </div>
-              @endforeach
-            @endforeach
+            <input type="hidden" name="folder_id" :value="folder?.id">
           </div>
 
-          <!-- INPUT HIDDEN PARA EL FORM -->
-          <input type="hidden" name="folder_id" :value="selected?.id">
+          <!-- TITLE -->
+          <input type="text" name="title" placeholder="Title"
+            class="w-full border rounded-lg p-3 text-sm border-gray-200" required>
+
+          <!-- DESCRIPTION -->
+          <textarea name="description" placeholder="Description (optional)"
+            class="w-full border rounded-lg p-2 text-sm h-15 border-gray-200"></textarea>
+
+          <!-- TAGS -->
+          <input type="text" name="tags" placeholder="modern, free, minimalist"
+            class="w-full border rounded-lg p-2 text-sm border-gray-200">
+
+          <!-- BUTTONS -->
+          <div class="flex justify-end gap-3 pt-3 mt-3">
+            <button type="button" @click="open = false"
+              class="px-8 py-2.5 bg-gray-100 rounded-3xl hover:bg-gray-200">
+              Cancel
+            </button>
+
+            <button type="button"
+              @click="if (!folder?.id) { folderError = true } else { $el.closest('form').submit() }"
+              class="px-8 py-2.5 bg-black text-white rounded-3xl hover:bg-gray-800">
+              Save
+            </button>
+          </div>
 
         </div>
-
-        <!-- TITLE -->
-        <input type="text" name="title" placeholder="Title"
-          class="w-full border rounded-lg p-3 text-sm border-gray-200" required>
-
-        <!-- DESCRIPTION -->
-        <textarea name="description" placeholder="Description (optional)"
-          class="w-full border rounded-lg p-2 text-sm h-15 border-gray-200"></textarea>
-
-        <!-- TAGS -->
-        <input type="text" name="tags" placeholder="modern, free, minimalist"
-          class="w-full border rounded-lg p-2 text-sm border-gray-200">
-      </div>
-
-      <!-- BUTTONS -->
-      <div class="flex justify-end gap-3 pt-3 mt-3">
-        <button type="button" @click="open = false" class="px-8 py-2.5 bg-gray-100 rounded-3xl hover:bg-gray-200">
-          Cancel
-        </button>
-
-        <button type="submit" class="px-8 py-2.5 bg-black text-white rounded-3xl hover:bg-gray-800">
-          Save
-        </button>
-      </div>
     </form>
   </div>
 </div>

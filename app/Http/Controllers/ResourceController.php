@@ -37,7 +37,7 @@ class ResourceController extends Controller {
             'url' => 'nullable|string|max:500',
             'folder_id' => 'nullable|exists:folders,id',
             'tags' => 'nullable|string',
-            'image' => 'nullable|image|max:10240'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
         ]);
 
         $resource = Auth::user()->resources()->create([
