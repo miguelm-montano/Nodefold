@@ -14,10 +14,11 @@
         <!-- WEB -->
         <template x-if="selectedResource?.type === 'web'">
           <div class="w-full h-full bg-gray-100 rounded-lg flex flex-col items-center justify-center gap-3 p-4">
-            <img :src="`https://www.google.com/s2/favicons?domain=${new URL(selectedResource.url).hostname}&sz=64`"
+            <img
+              :src="`https://www.google.com/s2/favicons?domain=${selectedResource?.url ? new URL(selectedResource.url).hostname : ''}&sz=64`"
               class="w-10 h-10 rounded">
-            <p class="text-xs text-gray-400 text-center break-all" x-text="selectedResource.url"></p>
-            <a :href="selectedResource.url" target="_blank"
+            <p class="text-xs text-gray-400 text-center break-all" x-text="selectedResource?.url"></p>
+            <a :href="selectedResource?.url" target="_blank"
               class="text-xs bg-black text-white px-4 py-2 rounded-3xl hover:bg-gray-800 transition">
               Visit site
             </a>
@@ -28,12 +29,12 @@
         <template x-if="selectedResource?.type === 'font'">
           <div
             class="w-full h-full bg-gray-50 border border-gray-100 rounded-lg flex flex-col items-center justify-center gap-4 p-6">
-            <p class="text-5xl text-black" :style="`font-family: '${selectedResource.fontName}', sans-serif`">Aa</p>
+            <p class="text-5xl text-black" :style="`font-family: '${selectedResource?.fontName}', sans-serif`">Aa</p>
             <p class="text-xl text-black text-center leading-relaxed"
-              :style="`font-family: '${selectedResource.fontName}', sans-serif`">
+              :style="`font-family: '${selectedResource?.fontName}', sans-serif`">
               ABCDEFGHIJKLM<br>abcdefghijklm<br>0123456789
             </p>
-            <a x-show="selectedResource.url" :href="selectedResource.url" target="_blank"
+            <a x-show="selectedResource?.url" :href="selectedResource?.url" target="_blank"
               class="text-xs bg-black text-white px-4 py-2 rounded-3xl hover:bg-gray-800 transition mt-2">
               View font
             </a>
@@ -46,7 +47,7 @@
 
             <!-- FRANJAS -->
             <div class="flex w-full flex-1">
-              <template x-for="color in selectedResource.color_data" :key="color">
+              <template x-for="color in selectedResource?.color_data" :key="color">
                 <div class="flex-1 h-full" :style="`background-color: #${color}`"></div>
               </template>
             </div>
@@ -57,8 +58,8 @@
         <template x-if="selectedResource?.type === 'icon'">
           <div
             class="w-full h-full bg-gray-50 border border-gray-100 rounded-lg flex flex-col items-center justify-center gap-4 p-6">
-            <img :src="selectedResource.url" class="w-24 h-24 object-contain">
-            <a :href="selectedResource.url" target="_blank"
+            <img :src="selectedResource?.url" class="w-24 h-24 object-contain">
+            <a :href="selectedResource?.url" target="_blank"
               class="text-xs bg-black text-white px-4 py-2 rounded-3xl hover:bg-gray-800 transition">
               View icon
             </a>
@@ -99,7 +100,7 @@
           <!-- VIEW -->
           <div x-show="!editing">
             <div x-show="selectedResource?.description && selectedResource.description.trim() !== ''">
-              <p class="text-sm text-black" x-text="selectedResource.description"></p>
+              <p class="text-sm text-black" x-text="selectedResource?.description"></p>
             </div>
 
             <div x-show="!selectedResource?.description || selectedResource.description.trim() === ''">
@@ -123,8 +124,8 @@
           <!-- VIEW -->
           <div x-show="!editing">
             <div x-show="selectedResource?.url">
-              <a :href="selectedResource.url" target="_blank"
-                class="block max-w-full text-sm text-blue-500 underline truncate" x-text="selectedResource.url">
+              <a :href="selectedResource?.url" target="_blank"
+                class="block max-w-full text-sm text-blue-500 underline truncate" x-text="selectedResource?.url">
               </a>
             </div>
 
@@ -189,7 +190,7 @@
 
               <button
                 class="flex items-center gap-1 px-5 py-2.5 bg-black hover:bg-red-600 text-white text-xs font-medium rounded-3xl transition duration-200"
-                @click="openDeleteModal('resource', selectedResource.id)">
+                @click="openDeleteModal('resource', selectedResource?.id)">
                 <x-heroicon-o-trash class="w-5 h-5" />
                 Delete
               </button>

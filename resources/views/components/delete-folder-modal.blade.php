@@ -44,9 +44,9 @@
 
       <!-- FORM DINÁMICO -->
       <form x-show="deleteTarget"
-        :action="deleteTarget.type === 'resource' ?
-            `/resources/${deleteTarget.id}` :
-            `/folders/${deleteTarget.id}`"
+        :action="deleteTarget?.type === 'resource' ?
+            `/resources/${deleteTarget?.id}` :
+            `/folders/${deleteTarget?.id}`"
         method="POST">
 
         @csrf

@@ -4,8 +4,8 @@
       Dashboard
     </h2>
   </x-slot>
-  <script src="{{ asset('js/dashboard.js') }}"></script>
-  <script src="{{ asset('js/folder-creator.js') }}"></script>
+  {{-- <script src="{{ asset('js/dashboard.js') }}"></script> --}}
+  {{-- <script src="{{ asset('js/folder-creator.js') }}"></script> --}}
 
   <div x-data="{
       ...dashboardData(),
@@ -27,7 +27,7 @@
   }" class="flex h-screen overflow-hidden">
 
     <!-- LEFT BAR -->
-    @include('dashboard.partials.left-sidebar')
+    <livewire:folder-sidebar />
 
     <!-- CENTER GRID -->
     @include('dashboard.partials.grid')
