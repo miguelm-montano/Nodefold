@@ -1,59 +1,186 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="public/images/nf-banner.jpg" alt="Nodefold-banner" title="Nodefold-banner" width="600">
 </p>
 
-## About Laravel
+## About
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**Nodefold** is a minimal workspace designed to help you save and organize resources for your creative projects. From images and icons to fonts and web inspiration, it provides a dedicated space to store, structure, and keep track of the tools that spark your ideas, whether for immediate use or future reference.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Built around the idea that every resource deserves its own folder, Nodefold allows you to create custom collections and organize everything in a way that fits your workflow.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 💻 Technologies Used
 
-## Learning Laravel
+- **Backend:** PHP (>=8.1), Laravel, Livewire
+- **Frontend:** Blade, Alpine.js, HTML5, Tailwind CSS
+- **Database:** MySQL
+- **Environment:** XAMPP
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Features
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Authentication
 
-## Laravel Sponsors
+- Create an account and/or log in
+- Reset password
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Dashboard
 
-### Premium Partners
+- Create parent folders and subfolders
+- Edit or delete folders
+- Add new resources (Images, Fonts, Websites, Color Palettes, Icons)
+- Set a name, description, URL, and tags for each resource
+- Click on a resource to view and edit its details
+- Move between folders
+- Search resources by name or tag
+- Filter resources by tag, untagged, or view all
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### User Profile
 
-## Contributing
+- Update personal information
+- Change password
+- Delete account
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Additional
 
-## Code of Conduct
+- Custom 404 error page
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+<p align="center">
+  <img src="public/images/nf-banner2.png" width="49%" />
+  <img src="public/images/nf-banner4.jpg" width="49%" />
+</p>
 
-## Security Vulnerabilities
+<p align="center">
+  <img src="public/images/nf-banner3.jpg" width="49%" />
+  <img src="public/images/nf-banner5.jpg" width="49%" />
+</p>
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 🛠️ Setup & Installation
 
-## License
+### Prerequisites
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Make sure your local development environment is running.  
+If you're using **XAMPP**, start both **Apache** and **MySQL** services before proceeding.
+
+### Clone the repository
+
+```bash
+git clone https://github.com/miguelm-montano/Nodefold.git
+cd Nodefold
+```
+
+## Install dependencies
+
+```bash
+composer install
+npm install
+```
+
+## Configure environment
+
+Create your environment file and generate the application key:
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+## Create the symbolic link for storage
+
+This command creates a symbolic link between the storage folder and the public directory, allowing uploaded files to be publicly accessible:
+
+```bash
+php artisan storage:link
+```
+
+## Create the database
+
+Create a database named **mood_vault** then update your **.env** file with your database credentials:
+
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=mood_vault
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+## Run migrations
+
+```bash
+php artisan migrate
+```
+
+## Start the development servers
+
+In the first terminal:
+
+```bash
+npm run dev
+```
+
+In a second terminal:
+
+```bash
+php artisan serve
+```
+
+Then open: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+## Custom 404 Page
+
+To view the custom 404 page:
+
+```bash
+Set APP_DEBUG=false in your .env file.
+
+Navigate to any non-existent route, for example:
+http://127.0.0.1:8000/non-existent-page
+
+After testing, set APP_DEBUG=true again for normal development.
+```
+
+## 📨 Mail & Password Reset
+
+Password reset and email verification are powered by Laravel Breeze.
+For local development, emails are configured in log mode:
+
+```bash
+MAIL_MAILER=log
+```
+
+Instead of sending real emails, the reset password link will be stored in:
+
+```bash
+storage/logs/laravel.log
+```
+
+## ⚠️ Troubleshooting
+
+If you experience unexpected behavior (routes not updating, configuration changes not applying, views not refreshing, etc.), try clearing the application cache:
+
+```bash
+php artisan view:clear
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+```
+
+## Project Branches
+
+At the moment, the project contains two main branches:
+
+### `develop`
+
+This branch implements the core functionality using Alpine.js for frontend interactions.
+
+While fully functional, some actions (such as creating folders or updating resources) may cause small page refreshes or brief visual jumps due to the traditional request-response cycle.
+
+---
+
+### `develop-livewire`
+
+This branch enhances the user experience by integrating Laravel Livewire.
+
+By using Livewire, many interactions (e.g., creating folders, updating content) are handled dynamically without full page reloads, resulting in smoother transitions and a more reactive interface.
+
+The **develop-livewire** branch represents the direction of the project moving forward.
