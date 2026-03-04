@@ -95,103 +95,173 @@
 
 
   <!-- Second section -->
-  <section class="bg-gray-50 text-black px-6 md:px-16 py-24">
-    <div class="max-w-6xl mx-auto w-full flex flex-col items-center gap-10">
+  <section class="bg-white text-black px-6 md:px-16 py-20">
+    <div class="max-w-7xl mx-auto w-full flex flex-col gap-16">
 
-      <!-- TITLE -->
-      <h2 class="text-4xl md:text-4xl font-bold text-center">
-        Start with a empty space, like a blank sheet of paper.
-      </h2>
+      <!-- HEADLINE -->
+      <div class="flex flex-col md:flex-row gap-12 items-start">
 
-      <!-- CENTER -->
-      <div class="w-full rounded-3xl overflow-hidden grid grid-cols-2 shadow-lg h-[440px]">
-
-        <!-- IMG -->
-        <div class="bg-white border border-gray-200 rounded-l-3xl overflow-hidden">
-          <img src="{{ asset('images/Empty-dashboard.jpg') }}"
-            class="w-full h-full object-cover object-[0%_0%] scale-[2] origin-top-left" />
-        </div>
-
-        <!-- TXT -->
-        <div class="bg-[#000000] flex px-10">
-          <p class="text-white mt-8 font-bold text-2xl md:text-3xl leading-tight">
-            Your resources will<br>be stored and <br> displayed in this <br> space.
+        <!-- TITLE -->
+        <div class="flex-1 flex flex-col gap-4 text-right mt-28">
+          <h2 class="text-4xl md:text-5xl font-bold leading-tight">
+            Start with an empty space, like a blank sheet of paper.
+          </h2>
+          <!-- LINE AND SUBTITLE -->
+          <div class="mt-2 h-[10px] w-full bg-black rounded-full"></div>
+          <p class="text-black text-lm font-medium mt-2 text-right">
+            Nodefol helps you organize each project with what you need
           </p>
         </div>
+
+        <!-- IMAGES -->
+        <div class="flex flex-row gap-4 w-full md:w-auto shrink-0 items-start mt-4">
+
+          <!-- PAPER IMAGE -->
+          <div class="w-[294px] h-[340px] rounded-3xl overflow-hidden bg-gray-200 shrink-0 mt-8">
+            <img src="{{ asset('images/Papers.jpeg') }}" alt="Papers"
+              class="w-full h-full object-cover object-center" />
+          </div>
+
+          <!-- WEB CARD -->
+          <div class="flex flex-col gap-3 w-[240px] shrink-0">
+
+            <!-- INFO CARD -->
+            <div
+              class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex flex-col gap-1 transition-all duration-300 ease-in-out hover:scale-[1.03] hover:shadow-md cursor-default">
+              <div class="flex items-center gap-2 mb-1">
+                <!-- ICON -->
+                <div
+                  class="w-6 h-6 rounded-md bg-blue-100 flex items-center justify-center text-[10px] font-bold text-blue-500 shrink-0">
+                  <img src="{{ asset('images/coolors_icon.png') }}" alt="Main visual"
+                    class="w-full h-full object-cover object-center" />
+                </div>
+              </div>
+              <p class="text-sm font-semibold text-black leading-tight">Coolors</p>
+              <p class="text-xs text-gray-400">coolors.co</p>
+            </div>
+
+            <!-- COLOR PALETTE -->
+            <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+              <!-- IMAGGE -->
+              <div class="h-[280px] bg-gray-100 overflow-hidden relative">
+                <img src="{{ asset('images/Palete.png') }}" alt="Main visual"
+                  class="w-full h-full object-cover object-center" />
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
 
-      <!-- CARDS -->
-      <div class="w-full grid grid-cols-5 gap-4">
+      <!-- HOW IT WORKS -->
+      <div class="flex flex-col gap-6 -mt-14">
+        <p class="text-lm font-bold text-black uppercase font-['Montserrat',_serif]">How it works?</p>
 
-        <!-- CARD 1 -->
-        <div
-          class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm transition-transform duration-300 ease-in-out hover:scale-105">
-          <div class="flex flex-col gap-2">
-            <x-heroicon-o-plus class="w-5 h-5" style="stroke-width: 1.5" />
-            <p class="text-sm">Create new folder</p>
-          </div>
-          <p class="text-sm font-bold">Build your project structure</p>
-        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-        <!-- CARD 2 -->
-        <div
-          class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm transition-transform duration-300 ease-in-out hover:scale-105">
-          <div class="flex flex-col gap-2">
-            <div class="flex flex-row gap-2">
-              <x-heroicon-o-folder-open class="w-5 h-5" style="stroke-width: 1.5" />
-              <p>Collection</p>
+          <!-- Card 1 -->
+          <div
+            class="group bg-gray-100 border border-gray-100 rounded-2xl p-6 flex flex-col gap-4 shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.03] hover:shadow-md cursor-default">
+            <div
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 group-hover:bg-black transition-colors duration-300">
+              <x-heroicon-o-plus class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors duration-300"
+                style="stroke-width: 1.5" />
             </div>
-            <div class="text-sm text-black">
-              <p class="pl-6 flex flex-row gap-2"> <x-heroicon-o-folder class="w-5 h-5"
-                  style="stroke-width: 1.5" />Fonts</p>
+            <div>
+              <p class="font-bold text-sm mb-1">Create Folders</p>
+              <p class="text-lm text-gray-500 leading-relaxed">Create folders and organize things in your own way</p>
             </div>
           </div>
-          <p class="text-sm font-bold">Stay organized with custom collections</p>
-        </div>
 
-        <!-- CARD 3 -->
-        <div
-          class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm transition-transform duration-300 ease-in-out hover:scale-105">
-          <div class="flex flex-col gap-2">
-            <x-heroicon-o-pencil class="w-5 h-5" style="stroke-width: 1.5" />
-            <p class="text-sm">Rename project</p>
+          <!-- Card 2 -->
+          <div
+            class="group bg-gray-100 border border-gray-100 rounded-2xl p-6 flex flex-col gap-4 shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.03] hover:shadow-md cursor-default">
+            <div
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 group-hover:bg-black transition-colors duration-300">
+              <x-heroicon-o-folder-open
+                class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors duration-300"
+                style="stroke-width: 1.5" />
+            </div>
+            <div>
+              <p class="font-bold text-sm mb-1">Manage Collections</p>
+              <p class="text-lm text-gray-500 leading-relaxed">Collections allows you to keep everything separated by
+                type</p>
+            </div>
           </div>
-          <p class="text-sm font-bold">Rename each folder as needed</p>
-        </div>
 
-        <!-- CARD 4 -->
-        <div
-          class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm transition-transform duration-300 ease-in-out hover:scale-105">
-          <div class="flex flex-col gap-2">
-            <x-heroicon-o-paper-clip class="w-5 h-5" style="stroke-width: 1.5" />
-            <p class="text-sm">Add resource</p>
+          <!-- Card 3 -->
+          <div
+            class="group bg-gray-100 border border-gray-100 rounded-2xl p-6 flex flex-col gap-4 shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.03] hover:shadow-md cursor-default">
+            <div
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 group-hover:bg-black transition-colors duration-300">
+              <x-heroicon-o-paper-clip
+                class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors duration-300"
+                style="stroke-width: 1.5" />
+            </div>
+            <div>
+              <p class="font-bold text-sm mb-1">Add Resources</p>
+              <p class="text-lm text-gray-500 leading-relaxed">Images, fonts, typographies and more. All in one place
+              </p>
+            </div>
           </div>
-          <p class="text-sm font-bold">You can add images, web pages and more</p>
-        </div>
 
-        <!-- CARD 5 -->
-        <div
-          class="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col justify-between gap-6 shadow-sm transition-transform duration-300 ease-in-out hover:scale-105">
-          <div class="flex flex-col gap-2">
-            <x-heroicon-o-magnifying-glass class="w-5 h-5" style="stroke-width: 1.5" />
-            <p class="text-sm">Search</p>
+          <!-- Card 4 -->
+          <div
+            class="group bg-gray-100 border border-gray-100 rounded-2xl p-6 flex flex-col gap-4 shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.03] hover:shadow-md cursor-default">
+            <div
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 group-hover:bg-black transition-colors duration-300">
+              <x-heroicon-o-tag class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors duration-300"
+                style="stroke-width: 1.5" />
+            </div>
+            <div>
+              <p class="font-bold text-sm mb-1">Work with Tags</p>
+              <p class="text-lm text-gray-500 leading-relaxed">Tag your favorites to keep track of them</p>
+            </div>
           </div>
-          <p class="text-sm font-bold">Search what you need by name or tag</p>
-        </div>
 
+          <!-- Card 5 -->
+          <div
+            class="group bg-gray-100 border border-gray-100 rounded-2xl p-6 flex flex-col gap-4 shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.03] hover:shadow-md cursor-default">
+            <div
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 group-hover:bg-black transition-colors duration-300">
+              <x-heroicon-o-magnifying-glass
+                class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors duration-300"
+                style="stroke-width: 1.5" />
+            </div>
+            <div>
+              <p class="font-bold text-sm mb-1">Search your resources</p>
+              <p class="text-lm text-gray-500 leading-relaxed">Searching by name or tag will make it easier for you to
+                find everything</p>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div
+            class="group bg-gray-100 border border-gray-100 rounded-2xl p-6 flex flex-col gap-4 shadow-sm transition-all duration-300 ease-in-out hover:scale-[1.03] hover:shadow-md cursor-default">
+            <div
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 group-hover:bg-black transition-colors duration-300">
+              <x-heroicon-o-queue-list
+                class="w-5 h-5 text-gray-600 group-hover:text-white transition-colors duration-300"
+                style="stroke-width: 1.5" />
+            </div>
+            <div>
+              <p class="font-bold text-sm mb-1">Stay organized</p>
+              <p class="text-lm text-gray-500 leading-relaxed">Delete what you don't need, update information, organise
+                as you like</p>
+            </div>
+          </div>
+
+        </div>
       </div>
-
     </div>
   </section>
 
-  <!-- SVG DIVISOR -->
-
   <!-- Third section-->
-  <section class="text-black px-6 md:px-16 pt-18 relative bg-gray-50">
+  <section class="text-black px-6 md:px-16 pt-18 relative bg-white">
 
     <!-- Background -->
     <div class="absolute inset-x-0 bottom-0 h-[30%] flex flex-col">
-      <div class="flex-1 bg-gray-50"></div>
+      <div class="flex-1 bg-white"></div>
       <div class="flex-1 bg-black"></div>
     </div>
 
@@ -199,7 +269,7 @@
     <div class="max-w-7xl mx-auto w-full flex justify-center relative z-10 pb-18">
       <div class="flex flex-col items-center">
         <p class="font-bold text-5xl mb-3 text-center">Capture ideas and inspiration.</p>
-        <p class="text-center text-black">Centralize your resources: see the big picture and the details in
+        <p class="text-center text-black">Centralize what you need, see the big picture and the details in
           <strong><em>one place</em></strong>
         </p>
         <img src="{{ asset('images/nd-dash.png') }}" class="w-[1100px] object-contain mt-4" />
@@ -217,7 +287,7 @@
         <h2 class="font-bold text-4xl md:text-5xl mb-4">
           Made for creative work.
         </h2>
-        <p class="text-white">Nodefold let you safe diferent resources for your projects</p>
+        <p class="text-white">Nodefold has space for your favorites</p>
       </div>
 
       <!-- Cards -->
@@ -234,8 +304,8 @@
         <!-- Card 2 -->
         <div class="flex flex-col items-center gap-3">
           <p class="font-semibold text-sm">Web</p>
-          <img src="{{ asset('images/card-2.jpeg') }}"
-            class="w-full , h-72 object-cover rounded-2xl transition-transform duration-300 ease-in-out hover:scale-105" />
+          <img src="{{ asset('images/card-2.png') }}"
+            class="w-full, h-72 object-cover rounded-2xl transition-transform duration-300 ease-in-out hover:scale-105" />
           <p class="text-sm text-center">Save the web pages you need</p>
         </div>
 
@@ -260,12 +330,12 @@
   </section>
 
   <!-- Final section -->
-  <section class="bg-gray-50 text-black px-6 md:px-16 py-18">
+  <section class="bg-black text-white px-6 md:px-16 py-18">
     <div class="max-w-7xl mx-auto w-full flex flex-col items-center gap-6">
 
       <!-- Logo -->
       <div class="h-28 overflow-hidden flex justify-center mb-10">
-        <dotlottie-wc src="https://lottie.host/67fb3ab4-4d5c-47dd-91ce-4d70dca3b40c/F693QrzY3H.lottie"
+        <dotlottie-wc src="https://lottie.host/7f3129a3-cb27-4f59-94a7-e1b00a792639/7yEPP2VRSt.lottie"
           class="w-48 h-48" autoplay loop></dotlottie-wc>
       </div>
       <!-- Text -->
@@ -273,15 +343,15 @@
 
       <!-- Button -->
       <a href="{{ route('register') }}"
-        class="bg-black text-white px-12 py-3 mt-10 rounded-3xl font-semibold hover:bg-gray-800 transition">
+        class="bg-white text-black px-12 py-3 mt-10 rounded-3xl font-semibold hover:bg-gray-200 transition">
         Sign up
       </a>
 
       <!-- Footer links -->
-      <div class="flex gap-6 text-sm text-gray-400 mt-36 mb-5">
-        <a href="#" class="hover:text-black transition">More</a>
-        <a href="#" class="hover:text-black transition">Terms</a>
-        <a href="#" class="hover:text-black transition">Privacy</a>
+      <div class="flex gap-6 text-sm text-gray-200 mt-36 mb-5">
+        <a href="#" class="hover:text-gray-200 transition">More</a>
+        <a href="#" class="hover:text-gray-200 transition">Terms</a>
+        <a href="#" class="hover:text-gray-200 transition">Privacy</a>
       </div>
 
     </div>
