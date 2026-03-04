@@ -53,6 +53,67 @@ Built around the idea that every resource deserves its own folder, Nodefold allo
   <img src="public/images/nf-banner5.jpg" width="49%" />
 </p>
 
+## How It Works
+
+Nodefold allows you to save and organize different types of creative resources.  
+Each resource type works slightly differently:
+
+---
+
+### 🖼 Images
+
+Upload images directly from your device.  
+The file will be stored locally and displayed inside your selected folder.
+
+---
+
+### 🔤 Fonts
+
+To save a font, copy the font URL from:
+
+https://fonts.google.com
+
+Paste the link into the font input field and Nodefold will store it as a reference resource.
+
+---
+
+### 🎨 Color Palettes
+
+This feature integrates with:
+
+https://coolors.co
+
+Simply copy the URL of a color palette and paste it into the input field.  
+Nodefold will store the palette and automatically extract and display the HEX color codes.
+
+---
+
+### 🌐 Websites
+
+To save a website, paste its URL into the web input field.
+
+---
+
+### ⭐ Icons
+
+To save icons, copy the CDN URL from:
+
+https://allsvgicons.com/
+
+Paste it into the input field, and Nodefold will store it as an external icon resource.
+
+## 🚧 Current Limitations
+
+At the moment, Fonts, Color Palettes, and Icons depend directly on specific external sources (Google Fonts, Coolors, and AllSVGIcons).
+
+Future improvements aim to:
+
+- Support additional providers
+- Allow manual HEX input for palettes
+- Enable direct SVG uploads for icons
+
+---
+
 ### 🛠️ Setup & Installation
 
 ### Prerequisites
