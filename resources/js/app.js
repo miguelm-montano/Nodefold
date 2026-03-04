@@ -4,32 +4,48 @@ import imagesLoaded from "imagesloaded";
 import { dashboardData } from "./dashboard";
 import { folderCreator } from "./folder-creator";
 
-// Livewire 3 ya incluye Alpine internamente.
-// Registramos nuestras funciones en window para que Alpine las encuentre.
 window.dashboardData = dashboardData;
 window.folderCreator = folderCreator;
 window.Masonry = Masonry;
 
-document.addEventListener("DOMContentLoaded", function () {
+let msnryInstance = null;
+let observerInstance = null;
+
+function initMasonry() {
     const grid = document.querySelector("#grid-masonry");
     if (!grid) return;
-    const msnry = new Masonry(grid, {
+
+    if (observerInstance) observerInstance.disconnect();
+    if (msnryInstance) msnryInstance.destroy();
+
+    msnryInstance = new Masonry(grid, {
         itemSelector: ".grid-item",
         columnWidth: ".grid-item",
         percentPosition: true,
         gutter: 16,
     });
-    imagesLoaded(grid, function () {
-        msnry.layout();
+    window.msnryInstance = msnryInstance;
+
+    imagesLoaded(grid, () => msnryInstance.layout());
+
+    observerInstance = new MutationObserver(() => {
+        msnryInstance?.layout();
     });
-    const observer = new MutationObserver(() => {
-        imagesLoaded(grid, function () {
-            msnry.layout();
-        });
-    });
-    observer.observe(grid, {
+
+    observerInstance.observe(grid, {
         attributes: true,
         subtree: true,
         attributeFilter: ["style"],
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => initMasonry());
+
+document.addEventListener("livewire:initialized", () => {
+    Livewire.hook("commit", ({ component, succeed }) => {
+        if (component.name !== "resource-grid") return;
+        succeed(() => {
+            requestAnimationFrame(() => initMasonry());
+        });
     });
 });

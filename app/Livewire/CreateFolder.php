@@ -4,18 +4,18 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class CreateFolder extends Component
-{
+class CreateFolder extends Component {
+
     public $name = '';
     public $parent_id = null;
 
-    public function mount($parent_id = null)
-    {
+    public function mount($parent_id = null) {
+
         $this->parent_id = $parent_id;
     }
 
-    public function createFolder()
-    {
+    public function createFolder() {
+
         $this->validate([
             'name' => 'required|string|max:255'
         ]);
@@ -27,11 +27,16 @@ class CreateFolder extends Component
 
         $this->name = '';
 
-        $this->dispatch('folderCreated');
+        $this->dispatch('folderCreated', folders: auth()->user()->folders()
+            ->whereNull('parent_id')
+            ->with('children')
+            ->get()
+            ->toArray()
+        );
     }
 
-    public function render()
-    {
+    public function render() {
+        
         return view('livewire.create-folder');
     }
 }

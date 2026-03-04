@@ -3,12 +3,16 @@
 <div x-data="{
     open: false,
     folderId: null,
-    folderName: ''
+    folderName: '',
+    folders: @js($folders->whereNull('parent_id')->load('children')),
 }" x-show="open" x-cloak x-init="window.addEventListener('open-resource-modal', event => {
     open = true;
     folderId = event.detail.folderId;
     folderName = event.detail.folderName;
-})"
+});
+window.addEventListener('folderCreated', event => {
+    folders = event.detail.folders;
+});"
   class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 font-['Montserrat',_serif]">
   <div class="absolute inset-0" @click="open = false"></div>
 
@@ -37,23 +41,18 @@
 
           <label for="fileInput" class="cursor-pointer block">
 
-            <!-- ICON -->
             <div class="flex justify-center mb-3 text-black">
               <x-heroicon-o-paper-clip class="w-8 h-8" />
             </div>
 
-            <!-- DEFAULT STATE -->
             <template x-if="!hasFile">
               <div>
                 <p class="font-medium text-sm mb-1">Drop file here</p>
                 <p class="text-xs text-gray-500">or click to browse</p>
-                <p class="text-xs text-gray-400 mt-1">
-                  Images, fonts, icons (max 10MB)
-                </p>
+                <p class="text-xs text-gray-400 mt-1">Images, fonts, icons (max 10MB)</p>
               </div>
             </template>
 
-            <!-- FILE SELECTED -->
             <template x-if="hasFile">
               <div class="text-green-600">
                 <p class="font-medium text-sm">File selected</p>
@@ -78,78 +77,51 @@
         <!-- TYPE -->
         <div x-data="{ open: false, selected: null }" class="relative">
 
-          <label class="text-xs font-medium text-gray-700 mb-2 block">
-            Type
-          </label>
+          <label class="text-xs font-medium text-gray-700 mb-2 block">Type</label>
 
-          <!-- SELECT BUTTON -->
           <button type="button" @click="open = !open"
             class="w-full border rounded-lg p-3 text-sm flex items-center justify-between">
             <div class="flex items-center gap-2">
               <template x-if="selected">
                 <span x-html="selected.icon"></span>
               </template>
-
               <span x-text="selected ? selected.name : 'Select type'"></span>
             </div>
-
             <x-heroicon-o-chevron-down class="w-4 h-4" />
           </button>
 
-          <!-- DROPDOWN -->
           <div x-show="open" @click.away="open = false" x-cloak
             class="absolute mt-1 w-full bg-white border rounded-lg shadow-lg z-50">
-
-            <!-- FONT -->
             <div class="px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
               @click="selected = { id: 'font', name: 'Font', icon: '' }; open = false">
-              <x-heroicon-o-language class="w-4 h-4" />
-              Font
+              <x-heroicon-o-language class="w-4 h-4" /> Font
             </div>
-
-            <!-- IMAGE -->
             <div class="px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
               @click="selected = { id: 'image', name: 'Image', icon: '' }; open = false">
-              <x-heroicon-o-photo class="w-4 h-4" />
-              Image
+              <x-heroicon-o-photo class="w-4 h-4" /> Image
             </div>
-
-            <!-- COLOR PALETTE -->
             <div class="px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
               @click="selected = { id: 'color_palette', name: 'Color palette', icon: '' }; open = false">
-              <x-heroicon-o-swatch class="w-4 h-4" />
-              Color palette
+              <x-heroicon-o-swatch class="w-4 h-4" /> Color palette
             </div>
-
-            <!-- ICON -->
             <div class="px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
               @click="selected = { id: 'icon', name: 'Icon', icon: '' }; open = false">
-              <x-heroicon-o-sparkles class="w-4 h-4" />
-              Icon
+              <x-heroicon-o-sparkles class="w-4 h-4" /> Icon
             </div>
-
-            <!-- WEB -->
             <div class="px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
               @click="selected = { id: 'web', name: 'Web', icon: '' }; open = false">
-              <x-heroicon-o-globe-alt class="w-4 h-4" />
-              Web
+              <x-heroicon-o-globe-alt class="w-4 h-4" /> Web
             </div>
-
           </div>
 
-          <!-- HIDDEN INPUT -->
           <input type="hidden" name="type" :value="selected?.id" required>
-
         </div>
 
         <!-- FOLDER SELECTOR -->
         <div x-data="{ folderOpen: false, folder: null, folderError: false }" class="space-y-4">
 
-          <!-- CHOOSE FOLDER -->
           <div class="relative">
-            <label class="text-xs font-medium text-gray-700 mb-2 block ml-1">
-              Choose the folder
-            </label>
+            <label class="text-xs font-medium text-gray-700 mb-2 block ml-1">Choose the folder</label>
 
             <button type="button" @click="folderOpen = !folderOpen"
               class="w-full border rounded-lg p-3 text-sm flex items-center justify-between"
@@ -160,24 +132,26 @@
               <x-heroicon-o-chevron-down class="w-4 h-4" />
             </button>
 
+            <!-- DROPDOWN - ahora dinámico con x-for -->
             <div x-show="folderOpen" @click.away="folderOpen = false" x-cloak
               class="absolute mt-1 w-full bg-white border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
 
-              @foreach ($folders->whereNull('parent_id') as $parentFolder)
-                <div class="px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
-                  @click="folder = { id: {{ $parentFolder->id }}, name: '{{ $parentFolder->name }}' }; folderOpen = false; folderError = false">
-                  <x-heroicon-o-folder class="w-4 h-4" />
-                  {{ $parentFolder->name }}
-                </div>
-
-                @foreach ($parentFolder->children as $child)
-                  <div class="px-8 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
-                    @click="folder = { id: {{ $child->id }}, name: '{{ $child->name }}' }; folderOpen = false; folderError = false">
-                    <x-heroicon-o-folder class="w-4 h-4 text-gray-400" />
-                    {{ $child->name }}
+              <template x-for="parentFolder in folders" :key="parentFolder.id">
+                <div>
+                  <div class="px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
+                    @click="folder = { id: parentFolder.id, name: parentFolder.name }; folderOpen = false; folderError = false">
+                    <x-heroicon-o-folder class="w-4 h-4" />
+                    <span x-text="parentFolder.name"></span>
                   </div>
-                @endforeach
-              @endforeach
+                  <template x-for="child in parentFolder.children" :key="child.id">
+                    <div class="px-8 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
+                      @click="folder = { id: child.id, name: child.name }; folderOpen = false; folderError = false">
+                      <x-heroicon-o-folder class="w-4 h-4 text-gray-400" />
+                      <span x-text="child.name"></span>
+                    </div>
+                  </template>
+                </div>
+              </template>
 
             </div>
 
@@ -202,7 +176,6 @@
               class="px-8 py-2.5 bg-gray-100 rounded-3xl hover:bg-gray-200">
               Cancel
             </button>
-
             <button type="button"
               @click="if (!folder?.id) { folderError = true } else { $el.closest('form').submit() }"
               class="px-8 py-2.5 bg-black text-white rounded-3xl hover:bg-gray-800">

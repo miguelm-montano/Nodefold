@@ -96,7 +96,7 @@
 
               <!-- MODO NORMAL -->
               <span x-show="!editing" x-text="name" class="text-sm cursor-pointer"
-                @click="$event.preventDefault(); window.location.href='{{ route('dashboard', ['folder' => $folder->id]) }}'">
+                @click="Livewire.dispatch('folderSelected', { folder_id: {{ $folder->id }} })">
               </span>
 
               <!-- MODO EDICIÓN -->
@@ -163,7 +163,7 @@
 
           <!-- INPUT HIJO -->
           <div x-show="openChild" class="ml-8" @click.away="openChild = false">
-            <livewire:create-folder :parent_id="$folder->id" />
+            <livewire:create-folder :parent_id="$folder->id" :key="'create-folder-' . $folder->id" />
           </div>
 
           <!-- HIJOS -->
@@ -203,9 +203,9 @@
                   <!-- MODO NORMAL -->
                   <span x-show="!editing" x-text="name" class="text-sm cursor-pointer"
                     @click.prevent="clearTimeout(clickTimer); clickTimer = setTimeout(() => {
-                      window.location.href='{{ route('dashboard', ['folder' => $child->id]) }}'}, 250)"
-                    @dblclick.prevent="clearTimeout(clickTimer); editing = true;
-                      $nextTick(() => $refs.childRenameInput.focus())">
+                    Livewire.dispatch('folderSelected', { folder_id: {{ $child->id }} })
+                    }, 250)"
+                    @dblclick.prevent="clearTimeout(clickTimer); editing = true; $nextTick(() => $refs.childRenameInput.focus())">
                   </span>
 
                   <!-- MODO EDICIÓN -->

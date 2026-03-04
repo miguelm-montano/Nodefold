@@ -24,13 +24,15 @@
         ],
     ),
 )
-  }" class="flex h-screen overflow-hidden">
+  }"
+    x-effect="selectedResource; setTimeout(() => { if (window.msnryInstance) window.msnryInstance.layout() }, 150)"
+    class="flex h-screen overflow-hidden">
 
     <!-- LEFT BAR -->
     <livewire:folder-sidebar />
 
     <!-- CENTER GRID -->
-    @include('dashboard.partials.grid')
+    <livewire:resource-grid :folder_id="request('folder') ? (int) request('folder') : null" :filter="request('filter')" />
 
     <!-- RIGHT BAR -->
     @include('dashboard.partials.right-sidebar')
