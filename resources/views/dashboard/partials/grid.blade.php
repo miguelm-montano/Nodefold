@@ -2,7 +2,7 @@
   <!-- HEADER DEL DASHBOARD -->
   <div class="px-6 pt-8 pb-4  flex items-center justify-between">
 
-    <!-- IZQUIERDA -->
+    <!-- LEFT -->
     <div class="flex items-center gap-2 ml-0.5">
 
       @if ($prevFolder)
@@ -34,7 +34,7 @@
       </h2>
     </div>
 
-    <!-- DERECHA -->
+    <!-- RIGHT -->
     <div class="flex items-center gap-4 mr-7">
       <button
         onclick="window.dispatchEvent(

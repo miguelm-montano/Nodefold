@@ -1,7 +1,7 @@
     <aside x-show="selectedResource" x-cloak
       class="w-72 border-l p-6 mt-4 flex flex-col gap-4 overflow-y-auto font-['Montserrat',_serif]">
 
-      <!-- CERRAR -->
+      <!-- CLOSE -->
       <div class="flex justify-end">
         <button @click="selectedResource = null; editing = false">
           <x-heroicon-o-x-mark class="w-5 h-5 text-black" style="stroke-width: 2" />
@@ -66,7 +66,7 @@
           </div>
         </template>
 
-        <!-- IMAGE (y resto de tipos) -->
+        <!-- IMAGE & OTHERS -->
         <template
           x-if="selectedResource?.type !== 'web' && selectedResource?.type !== 'font' && selectedResource?.type !== 'color_palette' && selectedResource?.type !== 'icon'">
           <img :src="selectedResource?.image" class="w-full h-full rounded-lg object-cover">
@@ -74,7 +74,7 @@
 
       </div>
 
-      <!-- TÍTULO -->
+      <!-- TITLE -->
       <div class="border-t">
         <p class="text-xs mb-1 font-semibold mt-3">Title</p>
 

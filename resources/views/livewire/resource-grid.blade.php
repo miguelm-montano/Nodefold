@@ -2,7 +2,7 @@
   <!-- HEADER -->
   <div class="px-6 pt-8 pb-4 flex items-center justify-between">
 
-    <!-- IZQUIERDA -->
+    <!-- LEFT -->
     <div class="flex items-center gap-2 ml-0.5">
 
       @if ($prevFolder)
@@ -32,7 +32,7 @@
       </h2>
     </div>
 
-    <!-- DERECHA -->
+    <!-- RIGHT -->
     <div class="flex items-center gap-4 mr-7">
       <button
         onclick="window.dispatchEvent(new CustomEvent('open-resource-modal', {
@@ -63,21 +63,27 @@
         @foreach ($resources as $resource)
           <div class="grid-item" style="width: 24%; margin-bottom: 16px;"
             x-show="!search.trim() ||
-              '{{ strtolower($resource->title) }}'.includes(search.toLowerCase()) ||
-              {{ json_encode($resource->tags->pluck('name')) }}.some(t => t.toLowerCase().includes(search.toLowerCase()))"
-            @click="selectedResource = {
-                id: {{ $resource->id }},
-                image: '{{ $resource->image_path ? asset('storage/' . $resource->image_path) : '' }}',
-                title: '{{ addslashes($resource->title) }}',
-                type: '{{ $resource->type }}',
-                description: '{{ addslashes($resource->description) }}',
-                url: {{ json_encode($resource->url) }},
-                folder: '{{ optional($resource->folder)->name }}',
-                folder_id: {{ $resource->folder_id ?? 'null' }},
-                tags: {{ json_encode($resource->tags->pluck('name')) }},
-                fontName: '{{ $resource->type === 'font' && $resource->url ? (preg_match('/family=([^:|]+)/', $resource->url, $m) ? str_replace('+', ' ', $m[1]) : $resource->title) : '' }}',
-                color_data: {{ json_encode($resource->color_data ?? []) }},
-              }">
+        '{{ strtolower($resource->title) }}'.includes(search.toLowerCase()) ||
+        {{ json_encode($resource->tags->pluck('name')) }}.some(t => t.toLowerCase().includes(search.toLowerCase()))"
+            data-resource="{{ json_encode([
+                'id' => $resource->id,
+                'image' => $resource->image_path ? asset('storage/' . $resource->image_path) : '',
+                'title' => $resource->title,
+                'type' => $resource->type,
+                'description' => $resource->description ?? '',
+                'url' => $resource->url,
+                'folder' => optional($resource->folder)->name ?? '',
+                'folder_id' => $resource->folder_id,
+                'tags' => $resource->tags->pluck('name'),
+                'fontName' =>
+                    $resource->type === 'font' && $resource->url
+                        ? (preg_match('/family=([^:|&]+)/', $resource->url, $m)
+                            ? str_replace('+', ' ', $m[1])
+                            : $resource->title)
+                        : '',
+                'color_data' => $resource->color_data ?? [],
+            ]) }}"
+            @click="$dispatch('select-resource', JSON.parse($el.dataset.resource))">
 
             @if (view()->exists('dashboard.gridtypes.type-' . $resource->type))
               @include('dashboard.gridtypes.type-' . $resource->type, ['resource' => $resource])

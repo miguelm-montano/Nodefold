@@ -24,7 +24,7 @@
         ],
     ),
 )
-  }"
+  }" @select-resource.window="selectedResource = $event.detail"
     x-effect="selectedResource; setTimeout(() => { if (window.msnryInstance) window.msnryInstance.layout() }, 150)"
     class="flex h-screen overflow-hidden">
 

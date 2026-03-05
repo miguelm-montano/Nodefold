@@ -132,7 +132,7 @@ window.addEventListener('folderCreated', event => {
               <x-heroicon-o-chevron-down class="w-4 h-4" />
             </button>
 
-            <!-- DROPDOWN - ahora dinámico con x-for -->
+            <!-- DROPDOWN -->
             <div x-show="folderOpen" @click.away="folderOpen = false" x-cloak
               class="absolute mt-1 w-full bg-white border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
 
