@@ -2,13 +2,24 @@
   <img src="public/images/nf-banner.jpg" alt="Nodefold-banner" title="Nodefold-banner" width="600">
 </p>
 
+## 📚 Table of Contents
+
+- [About](#about)
+- [Tech Stack](#-tech-stack)
+- [Features](#features)
+- [How It Works](#how-it-works)
+- [Setup & Installation](#️-setup--installation)
+- [Demo Account](#demo-account)
+- [Troubleshooting](#️-troubleshooting)
+- [Project Branches](#project-branches)
+
 ## About
 
 **Nodefold** is a minimal workspace designed to help you save and organize resources for your creative projects. From images and icons to fonts and web inspiration, it provides a dedicated space to store, structure, and keep track of the tools that spark your ideas, whether for immediate use or future reference.
 
 Built around the idea that every resource deserves its own folder, Nodefold allows you to create custom collections and organize everything in a way that fits your workflow.
 
-## 💻 Technologies Used
+## 💻 Tech Stack
 
 - **Backend:** PHP (>=8.1), Laravel, Livewire
 - **Frontend:** Blade, Alpine.js, HTML5, Tailwind CSS
@@ -42,6 +53,10 @@ Built around the idea that every resource deserves its own folder, Nodefold allo
 ### Additional
 
 - Custom 404 error page
+
+<p align="center">
+  <img src="public/images/Dash-nf.png" width="50%" />
+</p>
 
 <p align="center">
   <img src="public/images/nf-banner2.png" width="49%" />
@@ -104,7 +119,7 @@ Paste it into the input field, and Nodefold will store it as an external icon re
 
 ## 🚧 Current Limitations
 
-At the moment, Fonts, Color Palettes, and Icons depend directly on specific external sources (Google Fonts, Coolors, and AllSVGIcons).
+Currently, Fonts, Color Palettes, and Icons depend on specific external sources (Google Fonts, Coolors, and AllSVGIcons).
 
 Future improvements aim to:
 
@@ -128,7 +143,7 @@ git clone https://github.com/miguelm-montano/Nodefold.git
 cd Nodefold
 ```
 
-## Install dependencies
+### Install dependencies
 
 ```bash
 composer install
@@ -189,16 +204,27 @@ Then open: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ## Custom 404 Page
 
-To view the custom 404 page:
+To view the custom 404 page, set:
 
-```bash
-Set APP_DEBUG=false in your .env file.
-
-Navigate to any non-existent route, for example:
-http://127.0.0.1:8000/non-existent-page
-
-After testing, set APP_DEBUG=true again for normal development.
 ```
+APP_DEBUG=false
+```
+
+in your **.env** file.
+
+Then navigate to any non-existent route, for example:
+
+```
+http://127.0.0.1:8000/non-existent-page
+```
+
+After testing, set it back to:
+
+```
+APP_DEBUG=true
+```
+
+for normal development.
 
 ## 📨 Mail & Password Reset
 
@@ -214,6 +240,23 @@ Instead of sending real emails, the reset password link will be stored in:
 ```bash
 storage/logs/laravel.log
 ```
+
+## Demo Account
+
+To start with preloaded resources, run the database seeder:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+This will recreate the database and populate it with demo data.
+You can then log in using the following credentials:
+
+**Email:** email@email.com
+
+**Password:** password
+
+**🚧 This command will reset the database and remove any existing data.**
 
 ## ⚠️ Troubleshooting
 

@@ -9,9 +9,8 @@ use App\Models\Folder;
 
 class DemoSeeder extends Seeder
 {
-    public function run(): void
-    {
-        // ── USUARIO ───────────────────────────────────────────────────────
+    public function run(): void {
+       
         $user = User::firstOrCreate(
             ['email' => 'demo@demo.com'],
             [
@@ -20,7 +19,6 @@ class DemoSeeder extends Seeder
             ]
         );
 
-        // ── HELPER ────────────────────────────────────────────────────────
         $make = function (array $data) use ($user): void {
             $resource = $user->resources()->create([
                 'title'       => $data['title'],
@@ -36,42 +34,41 @@ class DemoSeeder extends Seeder
             }
         };
 
-        // ══════════════════════════════════════════════════════════════════
-        // RAÍZ 1 — Magazine Project
-        // ══════════════════════════════════════════════════════════════════
+
+        // Magazine Project
         $magazine = Folder::create(['name' => 'Magazine Project', 'user_id' => $user->id, 'parent_id' => null]);
 
-        // → Fonts
+        // Fonts
         $magFonts = Folder::create(['name' => 'Fonts', 'user_id' => $user->id, 'parent_id' => $magazine->id]);
 
         $make([
-            'title'       => 'Playfair Display',
+            'title'       => 'Holtwood One SC',
             'type'        => 'font',
-            'description' => 'High-contrast transitional serif. Classic choice for editorial headings and pull quotes.',
-            'url'         => 'https://fonts.google.com/specimen/Playfair+Display',
+            'description' => 'High-contrast font',
+            'url'         => 'https://fonts.google.com/share?selection.family=Holtwood+One+SC',
             'folder_id'   => $magFonts->id,
-            'tags'        => 'serif, editorial, display, elegant',
+            'tags'        => 'serif, editorial, bold',
         ]);
 
         $make([
             'title'       => 'Cormorant Garamond',
             'type'        => 'font',
             'description' => 'Literary and refined serif inspired by Garamond. Perfect for bylines and body copy.',
-            'url'         => 'https://fonts.google.com/specimen/Cormorant+Garamond',
+            'url'         => 'https://fonts.google.com/share?selection.family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700',
             'folder_id'   => $magFonts->id,
             'tags'        => 'serif, classic, literary, body-text',
         ]);
 
         $make([
-            'title'       => 'Libre Baskerville',
+            'title'       => 'Permanent Marker',
             'type'        => 'font',
-            'description' => 'Optimized for readability at small sizes. Solid workhorse for long-form magazine text.',
-            'url'         => 'https://fonts.google.com/specimen/Libre+Baskerville',
+            'description' => 'To apply on titles, perfect for natural posts.',
+            'url'         => 'https://fonts.google.com/share?selection.family=Permanent+Marker',
             'folder_id'   => $magFonts->id,
-            'tags'        => 'serif, readable, body-text, print',
+            'tags'        => 'marker, bold, handmade',
         ]);
 
-        // → Inspiration
+        // Inspiration
         $magInspo = Folder::create(['name' => 'Inspiration', 'user_id' => $user->id, 'parent_id' => $magazine->id]);
 
         $make([
@@ -92,163 +89,145 @@ class DemoSeeder extends Seeder
             'tags'        => 'typography, editorial, print, reference',
         ]);
 
-        $make([
-            'title'       => 'It\'s Nice That',
-            'type'        => 'web',
-            'description' => 'Creative publication covering graphic design, illustration and art direction.',
-            'url'         => 'https://www.itsnicethat.com',
-            'folder_id'   => $magInspo->id,
-            'tags'        => 'editorial, art-direction, illustration, inspiration',
-        ]);
-
-        // → Imagenes (vacía)
-        Folder::create(['name' => 'Imagenes', 'user_id' => $user->id, 'parent_id' => $magazine->id]);
+        // Images
+        Folder::create(['name' => 'Images', 'user_id' => $user->id, 'parent_id' => $magazine->id]);
 
 
-        // ══════════════════════════════════════════════════════════════════
-        // RAÍZ 2 — Fanzine
-        // ══════════════════════════════════════════════════════════════════
+
+        // Fanzine
         $fanzine = Folder::create(['name' => 'Fanzine', 'user_id' => $user->id, 'parent_id' => null]);
 
-        // → Colors
+        // Colors
         $fanColors = Folder::create(['name' => 'Colors', 'user_id' => $user->id, 'parent_id' => $fanzine->id]);
 
         $make([
-            'title'       => 'Risograph Punk',
+            'title'       => 'Earthy Forest',
             'type'        => 'color_palette',
-            'description' => 'Raw, high-contrast palette inspired by risograph printing. Two-color offset feel.',
-            'url'         => 'https://coolors.co/palette/ff006e-ffbe0b-fb5607-8338ec-3a86ff',
+            'description' => 'Earthy tones, natural look',
+            'url'         => 'https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41',
             'folder_id'   => $fanColors->id,
-            'color_data'  => ['ff006e', 'ffbe0b', 'fb5607', '8338ec', '3a86ff'],
-            'tags'        => 'riso, punk, vivid, print',
+            'color_data'  => ['dad7cd', 'a3b18a', '588157', '3a5a40', '344e41'],
         ]);
 
         $make([
-            'title'       => 'Xerox Noir',
+            'title'       => 'Rustic Earthy Tones',
             'type'        => 'color_palette',
-            'description' => 'Black, dirty white and a single acid accent. Classic DIY zine aesthetic.',
-            'url'         => 'https://coolors.co/palette/0d0d0d-f0ebe3-e63946-1d1d1d-ffffff',
+            'description' => 'Natural palette with brown tones',
+            'url'         => 'https://coolors.co/palette/7f5539-a68a64-ede0d4-656d4a-414833',
             'folder_id'   => $fanColors->id,
-            'color_data'  => ['0d0d0d', 'f0ebe3', 'e63946', '1d1d1d', 'ffffff'],
-            'tags'        => 'dark, minimal, diy, zine',
+            'color_data'  => ['7f5539', 'a68a64', 'ede0d4', '656d4a', '414833'],
+            'tags'        => 'brown, earthy, greens',
         ]);
 
         $make([
-            'title'       => 'Acid Summer',
+            'title'       => 'Nature Harmony',
             'type'        => 'color_palette',
-            'description' => 'Neon yellows and greens with dark base. Lo-fi underground poster energy.',
-            'url'         => 'https://coolors.co/palette/0d0d0d-ccff00-39ff14-1a1a2e-f5f5f5',
+            'description' => 'Earthy tones for a complete concept.',
+            'url'         => 'https://coolors.co/palette/eff1ed-373d20-717744-bcbd8b-766153',
             'folder_id'   => $fanColors->id,
-            'color_data'  => ['0d0d0d', 'ccff00', '39ff14', '1a1a2e', 'f5f5f5'],
-            'tags'        => 'neon, acid, lo-fi, underground',
+            'color_data'  => ['eff1ed', '373d20', '717744', 'bcbd8b', '766153'],
+            'tags'        => 'brown, titles, concept',
         ]);
 
         $make([
-            'title'       => 'Mimeograph Pastels',
+            'title'       => 'Fruit Punch',
             'type'        => 'color_palette',
-            'description' => 'Faded, slightly off tones that mimic old mimeograph or photocopied zines.',
-            'url'         => 'https://coolors.co/palette/f7b2bd-fce694-b5ead7-c7ceea-ffdac1',
+            'description' => 'Natural vivid colors.',
+            'url'         => 'https://coolors.co/palette/a41623-f85e00-ffb563-ffd29d-918450',
             'folder_id'   => $fanColors->id,
-            'color_data'  => ['f7b2bd', 'fce694', 'b5ead7', 'c7ceea', 'ffdac1'],
-            'tags'        => 'pastel, retro, faded, print',
+            'color_data'  => ['a41623', 'f85e00', 'ffb563', 'ffd29d', '918450'],
+            'tags'        => 'colorful, nature, fruits',
         ]);
 
-        // → Fuentes
-        $fanFonts = Folder::create(['name' => 'Fuentes', 'user_id' => $user->id, 'parent_id' => $fanzine->id]);
+        // Fonts
+        $fanFonts = Folder::create(['name' => 'Fonts', 'user_id' => $user->id, 'parent_id' => $fanzine->id]);
 
         $make([
-            'title'       => 'Special Elite',
+            'title'       => 'Shadows Light',
             'type'        => 'font',
-            'description' => 'Typewriter-style font with worn edges. Instantly gives that cut-and-paste zine feel.',
-            'url'         => 'https://fonts.google.com/specimen/Special+Elite',
+            'description' => 'Hand style, natural look.',
+            'url'         => 'https://fonts.google.com/share?selection.family=Shadows+Into+Light',
             'folder_id'   => $fanFonts->id,
-            'tags'        => 'typewriter, diy, zine, display',
+            'tags'        => 'natura, handmade',
         ]);
 
         $make([
-            'title'       => 'Bebas Neue',
+            'title'       => 'Anton',
             'type'        => 'font',
             'description' => 'Bold condensed all-caps sans. Great for aggressive headlines and poster-style layouts.',
-            'url'         => 'https://fonts.google.com/specimen/Bebas+Neue',
+            'url'         => 'https://fonts.google.com/share?selection.family=Anton',
             'folder_id'   => $fanFonts->id,
-            'tags'        => 'bold, condensed, headline, display',
         ]);
 
 
-        // ══════════════════════════════════════════════════════════════════
-        // RAÍZ 3 — Web Develop
-        // ══════════════════════════════════════════════════════════════════
+
+        //  Web Develop
         $webdev = Folder::create(['name' => 'Web Develop', 'user_id' => $user->id, 'parent_id' => null]);
 
-        // → Iconos
-        $devIcons = Folder::create(['name' => 'Iconos', 'user_id' => $user->id, 'parent_id' => $webdev->id]);
+        // Icons
+        $devIcons = Folder::create(['name' => 'Icons', 'user_id' => $user->id, 'parent_id' => $webdev->id]);
 
         $make([
-            'title'       => 'Code Alt',
+            'title'       => 'Cloud Arrow Down',
             'type'        => 'icon',
-            'description' => 'Code bracket icon. Useful for developer tools and IDE-themed UIs.',
-            'url'         => 'https://api.iconify.design/bxs:code-alt.svg',
+            'url'         => 'https://api.iconify.design/heroicons:cloud-arrow-down.svg',
             'folder_id'   => $devIcons->id,
-            'tags'        => 'code, dev, ui, bxs',
+            'tags'        => 'cloud, download, ui',
         ]);
 
         $make([
-            'title'       => 'Terminal',
+            'title'       => 'Spinner shuffle',
             'type'        => 'icon',
-            'description' => 'Terminal/console icon for developer dashboards and CLI references.',
-            'url'         => 'https://api.iconify.design/bxs:terminal.svg',
+            'description' => 'Animated icon.',
+            'url'         => 'https://api.iconify.design/svg-spinners:blocks-shuffle-3.svg',
             'folder_id'   => $devIcons->id,
-            'tags'        => 'terminal, cli, dev, bxs',
+            'tags'        => 'logo, front, presentation',
         ]);
 
         $make([
-            'title'       => 'Git Branch',
+            'title'       => 'Personal layers',
             'type'        => 'icon',
-            'description' => 'Git branch icon. Perfect for version control and project workflow UIs.',
-            'url'         => 'https://api.iconify.design/bxs:git-branch.svg',
+            'description' => 'Perfect for represent organization.',
+            'url'         => 'https://api.iconify.design/fluent-color:layer-diagonal-person-16.svg',
             'folder_id'   => $devIcons->id,
-            'tags'        => 'git, version-control, dev, bxs',
+            'tags'        => 'ui, personal, order',
         ]);
 
         $make([
-            'title'       => 'Cloud Upload',
+            'title'       => 'Layout',
             'type'        => 'icon',
-            'description' => 'Cloud upload icon for deploy, storage and CI/CD pipeline interfaces.',
-            'url'         => 'https://api.iconify.design/bxs:cloud-upload.svg',
+            'description' => 'For represente the concept',
+            'url'         => 'https://api.iconify.design/gridicons:layout.svg',
             'folder_id'   => $devIcons->id,
-            'tags'        => 'cloud, deploy, upload, bxs',
+            'tags'        => 'grid, layout, order',
         ]);
 
-        // → Colors
+        // Colors
         $devColors = Folder::create(['name' => 'Colors', 'user_id' => $user->id, 'parent_id' => $webdev->id]);
 
         $make([
-            'title'       => 'Dark UI System',
+            'title'       => 'Mystic Waters',
             'type'        => 'color_palette',
-            'description' => 'Deep dark grays with a cyan accent. Designed for developer dashboards and code editors.',
-            'url'         => 'https://coolors.co/palette/0d1117-161b22-21262d-30363d-58a6ff',
+            'url'         => 'https://coolors.co/palette/031926-468189-77aca2-9dbebb-f4e9cd',
             'folder_id'   => $devColors->id,
-            'color_data'  => ['0d1117', '161b22', '21262d', '30363d', '58a6ff'],
-            'tags'        => 'dark, ui, developer, github-inspired',
+            'color_data'  => ['031926', '468189', '77aca2', '9dbebb', 'f4e9cd'],
         ]);
 
         $make([
-            'title'       => 'Terminal Green',
+            'title'       => 'Whimsical Melody',
             'type'        => 'color_palette',
-            'description' => 'Classic terminal palette. Black background with phosphor green and soft grays.',
-            'url'         => 'https://coolors.co/palette/0a0a0a-1a1a1a-00ff41-008f11-f5f5f5',
+            'description' => 'Pastel for test',
+            'url'         => 'https://coolors.co/palette/fe938c-edaf97-c49792-ad91a3-9d91a3',
             'folder_id'   => $devColors->id,
-            'color_data'  => ['0a0a0a', '1a1a1a', '00ff41', '008f11', 'f5f5f5'],
-            'tags'        => 'terminal, green, dark, retro',
+            'color_data'  => ['fe938c', 'edaf97', 'c49792', 'ad91a3', '9d91a3'],
+            'tags'        => 'pastel, soft',
         ]);
 
-        // → Imagenes (vacía)
-        Folder::create(['name' => 'Imagenes', 'user_id' => $user->id, 'parent_id' => $webdev->id]);
+        // Images
+        Folder::create(['name' => 'Images', 'user_id' => $user->id, 'parent_id' => $webdev->id]);
 
 
-        // ══════════════════════════════════════════════════════════════════
-        // RAÍZ 4 — Webs (recursos directos en la carpeta raíz)
-        // ══════════════════════════════════════════════════════════════════
+        // Webs
         $webs = Folder::create(['name' => 'Webs', 'user_id' => $user->id, 'parent_id' => null]);
 
         $make([
