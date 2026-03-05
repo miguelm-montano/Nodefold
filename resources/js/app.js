@@ -40,6 +40,12 @@ function initMasonry() {
 }
 
 document.addEventListener("DOMContentLoaded", () => initMasonry());
+document.addEventListener("livewire:navigated", () =>
+    setTimeout(() => initMasonry(), 100),
+);
+document.addEventListener("livewire:navigate", () =>
+    setTimeout(() => initMasonry(), 100),
+);
 
 document.addEventListener("livewire:initialized", () => {
     Livewire.hook("commit", ({ component, succeed }) => {
