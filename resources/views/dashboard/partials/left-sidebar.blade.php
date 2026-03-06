@@ -35,7 +35,7 @@
       <!-- FOLDERS SECTION -->
       <p class="text-gray-500 text-xs mb-2 px-2 font-['Montserrat',_serif]">Folders</p>
 
-      <!-- Create new folder -->
+      <!-- CREATE NEW FOLDER -->
       <div x-data="folderCreator()" class="mb-6 min-h-[2rem] px-2">
 
         <!-- BUTTON -->
@@ -59,7 +59,7 @@
         </form>
       </div>
 
-      <!-- List folders -->
+      <!-- FOLDERST LIST -->
       <ul class="space-y-3 font-['Montserrat',_serif]">
         @foreach ($folders->whereNull('parent_id') as $folder)
           <li x-data="{
@@ -91,22 +91,22 @@
               }
           }" class="space-y-1">
 
-            <!-- FOLDER PADRE -->
+            <!-- FOLDER FATHER -->
             <div class="flex items-center justify-between group px-2 rounded-lg hover:bg-gray-100">
 
-              <!-- IZQUIERDA -->
+              <!-- LEFT -->
               <div class="flex items-center space-x-1 flex-1">
 
                 <span>
                   <x-heroicon-o-folder-open class="w-5 h-5 -mt-0.5" style="stroke-width: 1" />
                 </span>
 
-                <!-- MODO NORMAL -->
+                <!-- NORMAL MODE -->
                 <span x-show="!editing" x-text="name" class="text-sm cursor-pointer"
                   @click="$event.preventDefault(); window.location.href='{{ route('dashboard', ['folder' => $folder->id]) }}'">
                 </span>
 
-                <!-- MODO EDICIÓN -->
+                <!-- EDITION MODE -->
                 <input x-show="editing" x-ref="renameInput" x-model="name" @keydown.enter.prevent="saveRename()"
                   @keydown.escape="cancelRename()" @blur="saveRename()"
                   class="text-sm border rounded px-2 py-1 w-full bg-white" />
@@ -115,7 +115,7 @@
 
               <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition">
 
-                <!-- BOTÓN + -->
+                <!-- + -->
                 <button @click="openChild = true" class="text-gray-400 hover:text-black text-xl -mt-0.2">
                   +
                 </button>
@@ -168,7 +168,7 @@
 
             </div>
 
-            <!-- INPUT HIJO -->
+            <!-- INPUT SUBFOLDER -->
             <div x-show="openChild" class="ml-8">
               <form action="{{ route('folders.store') }}" method="POST">
                 @csrf
@@ -179,7 +179,7 @@
               </form>
             </div>
 
-            <!-- HIJOS -->
+            <!-- SUBFOLDER -->
             <div x-show="open">
               @foreach ($folder->children as $child)
                 <div x-data="{
@@ -207,13 +207,13 @@
                 }"
                   class="ml-6 flex items-center justify-between py-1 text-sm hover:bg-gray-100 rounded group">
 
-                  <!-- IZQUIERDA CLICKEABLE -->
+                  <!-- LEFT CLICK -->
                   <div class="flex items-center space-x-1 flex-1">
                     <span>
                       <x-heroicon-o-folder class="w-5 h-5 -mt-0.5 ml-3" style="stroke-width: 1" />
                     </span>
 
-                    <!-- MODO NORMAL -->
+                    <!-- NORMAL MODE -->
                     <span x-show="!editing" x-text="name" class="text-sm cursor-pointer"
                       @click.prevent="clearTimeout(clickTimer); clickTimer = setTimeout(() => {
                       window.location.href='{{ route('dashboard', ['folder' => $child->id]) }}'}, 250)"
@@ -221,13 +221,13 @@
                       $nextTick(() => $refs.childRenameInput.focus())">
                     </span>
 
-                    <!-- MODO EDICIÓN -->
+                    <!-- EDITION MODE -->
                     <input x-show="editing" x-ref="childRenameInput" x-model="name"
                       @keydown.enter.prevent="saveRename()" @keydown.escape="cancelRename()" @blur="saveRename()"
                       class="text-sm border rounded px-2 py-1 w-full bg-white" />
                   </div>
 
-                  <!-- BOTÓN DELETE -->
+                  <!-- DELETE BUTTON -->
                   <button class="opacity-0 group-hover:opacity-40 transition-opacity duration-200 mr-2"
                     @click.stop="openDeleteModal('folder', {{ $child->id }})">
                     ✕
@@ -240,7 +240,7 @@
         @endforeach
       </ul>
 
-      <!-- Profile Section -->
+      <!-- PROFILE SECTION -->
       <div class="mt-auto pt-3 border-t space-y-1 font-['Montserrat',_serif]">
 
         <!-- PROFILE -->

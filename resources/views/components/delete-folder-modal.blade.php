@@ -8,7 +8,7 @@
   <!-- Modal -->
   <div class="relative bg-white px-16 py-6 rounded-xl shadow-lg flex flex-col items-center text-center">
 
-    <!-- ICONO DINÁMICO -->
+    <!-- DINAMIC ICON -->
     <template x-if="deleteTarget?.type === 'folder'">
       <x-heroicon-o-trash class="w-14 h-14 mb-5 text-red-500" />
     </template>
@@ -17,13 +17,13 @@
       <x-heroicon-o-archive-box-x-mark class="w-14 h-14 mb-5 text-red-500" />
     </template>
 
-    <!-- TITULO -->
+    <!-- TITLE -->
     <h2 class="font-semibold">
       You want to delete this
       <span x-text="deleteTarget?.type"></span>?
     </h2>
 
-    <!-- MENSAJE -->
+    <!-- MESSAGE -->
     <p class="text-sm text-gray-500 mb-6">
       <template x-if="deleteTarget?.type === 'folder'">
         <span>This folder and all resources will be permanently removed.</span>
@@ -36,13 +36,13 @@
 
     <div class="flex justify-end gap-2">
 
-      <!-- Cancel -->
+      <!-- CANCEL -->
       <button type="button" @click="showDeleteModal = false"
         class="px-5 py-1 bg-gray-200 hover:bg-gray-300 rounded-3xl">
         Cancel
       </button>
 
-      <!-- FORM DINÁMICO -->
+      <!-- DINAMIC FORM -->
       <form x-show="deleteTarget"
         :action="deleteTarget.type === 'resource' ?
             `/resources/${deleteTarget.id}` :

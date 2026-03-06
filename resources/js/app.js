@@ -24,12 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
         gutter: 16,
     });
 
-    // Espera a que todas las imágenes carguen antes de calcular el layout
     imagesLoaded(grid, function () {
         msnry.layout();
     });
 
-    // Relanza el layout cuando Alpine muestra/oculta elementos
     const observer = new MutationObserver(() => {
         imagesLoaded(grid, function () {
             msnry.layout();

@@ -44,7 +44,7 @@
         <template x-if="selectedResource?.type === 'color_palette'">
           <div class="w-full h-full rounded-lg overflow-hidden flex flex-col">
 
-            <!-- FRANJAS -->
+            <!-- COLORS -->
             <div class="flex w-full flex-1">
               <template x-for="color in selectedResource.color_data" :key="color">
                 <div class="flex-1 h-full" :style="`background-color: #${color}`"></div>
@@ -65,7 +65,7 @@
           </div>
         </template>
 
-        <!-- IMAGE (y resto de tipos) -->
+        <!-- IMAGE AND TYPES -->
         <template
           x-if="selectedResource?.type !== 'web' && selectedResource?.type !== 'font' && selectedResource?.type !== 'color_palette' && selectedResource?.type !== 'icon'">
           <img :src="selectedResource?.image" class="w-full h-full rounded-lg object-cover">
@@ -73,7 +73,7 @@
 
       </div>
 
-      <!-- TÍTULO -->
+      <!-- TITLE -->
       <div class="border-t">
         <p class="text-xs mb-1 font-semibold mt-3">Title</p>
 
