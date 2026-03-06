@@ -7,6 +7,7 @@ use App\Models\Folder;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ResourceController extends Controller {
 
@@ -121,6 +122,12 @@ class ResourceController extends Controller {
 
         if($resource->user_id !== Auth::id()) {
             abort(403, 'Not Authorized');
+        }
+
+        if ($resource->image_path) {
+
+            Storage::delete($resource->image_path);
+
         }
 
         $resource->delete();
