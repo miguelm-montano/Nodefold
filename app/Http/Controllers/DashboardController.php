@@ -16,9 +16,9 @@ class DashboardController extends Controller {
             ->withCount('resources')
             ->get();
 
-        $counts          = $this->getResourceCounts($user);
-        $filtered        = $this->getFilteredResources($request, $user);
-        $navigation      = $this->getFolderNavigation($folders, $filtered['selectedFolder']);
+        $counts = $this->getResourceCounts($user);
+        $filtered = $this->getFilteredResources($request, $user);
+        $navigation = $this->getFolderNavigation($folders, $filtered['selectedFolder']);
 
         return view('dashboard', array_merge(
             $counts,
@@ -31,9 +31,9 @@ class DashboardController extends Controller {
     private function getResourceCounts($user): array {
 
         return [
-            'allCount'      => $user->resources()->count(),
+            'allCount' => $user->resources()->count(),
             'untaggedCount' => $user->resources()->doesntHave('tags')->count(),
-            'taggedCount'   => $user->resources()->has('tags')->count(),
+            'taggedCount' => $user->resources()->has('tags')->count(),
         ];
     }
 
@@ -43,21 +43,21 @@ class DashboardController extends Controller {
 
         if ($filter === 'untagged') {
             return [
-                'resources'      => $user->resources()->doesntHave('tags')->with(['folder', 'tags'])->get(),
+                'resources' => $user->resources()->doesntHave('tags')->with(['folder', 'tags'])->get(),
                 'selectedFolder' => null,
             ];
         }
 
         if ($filter === 'tagged') {
             return [
-                'resources'      => $user->resources()->has('tags')->with(['folder', 'tags'])->get(),
+                'resources' => $user->resources()->has('tags')->with(['folder', 'tags'])->get(),
                 'selectedFolder' => null,
             ];
         }
 
         if ($filter === 'all') {
             return [
-                'resources'      => $user->resources()->with(['folder', 'tags'])->get(),
+                'resources' => $user->resources()->with(['folder', 'tags'])->get(),
                 'selectedFolder' => null,
             ];
         }
@@ -69,18 +69,18 @@ class DashboardController extends Controller {
 
         if (!$request->has('folder')) {
             return [
-                'resources'      => $user->resources()->whereNull('folder_id')->with(['folder', 'tags'])->get(),
+                'resources' => $user->resources()->whereNull('folder_id')->with(['folder', 'tags'])->get(),
                 'selectedFolder' => null,
             ];
         }
 
-        $folderId       = $request->get('folder');
+        $folderId = $request->get('folder');
         $selectedFolder = Folder::where('id', $folderId)
             ->where('user_id', $user->id)
             ->firstOrFail();
 
         if ($selectedFolder->parent_id === null) {
-            $childIds  = Folder::where('parent_id', $folderId)
+            $childIds = Folder::where('parent_id', $folderId)
                 ->where('user_id', $user->id)
                 ->pluck('id');
 
@@ -105,7 +105,7 @@ class DashboardController extends Controller {
         }
 
         $allFolders = $folders->flatMap(fn($f) => collect([$f])->merge($f->children));
-        $index      = $allFolders->search(fn($f) => $f->id === $selectedFolder->id);
+        $index = $allFolders->search(fn($f) => $f->id === $selectedFolder->id);
 
         return [
             'prevFolder' => $index > 0 ? $allFolders->get($index - 1) : null,

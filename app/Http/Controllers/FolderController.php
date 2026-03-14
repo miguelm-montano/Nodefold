@@ -11,7 +11,7 @@ class FolderController extends Controller {
     public function store(Request $request) {
 
         $validated = $request->validate([
-            'name'      => 'required|string|max:50',
+            'name' => 'required|string|max:50',
             'parent_id' => 'nullable|exists:folders,id',
         ]);
 
@@ -26,7 +26,7 @@ class FolderController extends Controller {
         }
 
         Auth::user()->folders()->create([
-            'name'      => $validated['name'],
+            'name' => $validated['name'],
             'parent_id' => $validated['parent_id'] ?? null,
         ]);
 
