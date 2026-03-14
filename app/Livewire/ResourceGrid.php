@@ -21,18 +21,18 @@ class ResourceGrid extends Component {
     public function loadFolder(int $folder_id) {
 
         $this->folder_id = $folder_id;
-        $this->filter    = null;
+        $this->filter = null;
     }
 
     public function render() {
 
-        $user    = auth()->user();
+        $user = auth()->user();
         $folders = $user->folders()
             ->with(['children' => fn($q) => $q->withCount('resources')])
             ->withCount('resources')
             ->get();
 
-        $resources      = $this->getResources($user);
+        $resources = $this->getResources($user);
         $selectedFolder = $this->folder_id ? Folder::find($this->folder_id) : null;
 
         [$prevFolder, $nextFolder] = $this->getNavigation($folders, $selectedFolder);
