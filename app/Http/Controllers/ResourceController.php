@@ -21,9 +21,6 @@ class ResourceController extends Controller {
         
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
@@ -75,17 +72,11 @@ class ResourceController extends Controller {
         return null;
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
@@ -115,9 +106,6 @@ class ResourceController extends Controller {
         );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Resource $resource) {
 
         if($resource->user_id !== Auth::id()) {
