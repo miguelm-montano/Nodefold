@@ -51,4 +51,14 @@ class Resource extends Model {
 
         $this->tags()->sync($tagIds);
     }
+
+    public function getFontName(): ?string {
+
+        if (!$this->url) return null;
+        if (preg_match('/(?:family|selection\.family)=([^:&|]+)/', $this->url, $matches)) {
+            return str_replace('+', ' ', $matches[1]);
+        }
+            
+        return null;
+    }
 }

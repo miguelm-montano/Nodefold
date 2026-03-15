@@ -1,12 +1,4 @@
-@php
-  $fontName = null;
-  if ($resource->url) {
-      if (preg_match('/(?:family|selection\.family)=([^:&|]+)/', $resource->url, $matches)) {
-          $fontName = $matches[1];
-          $fontName = str_replace('+', ' ', $fontName);
-      }
-  }
-@endphp
+@php $fontName = $resource->getFontName() @endphp
 
 @if ($fontName)
   <link href="https://fonts.googleapis.com/css2?family={{ urlencode($fontName) }}&display=swap" rel="stylesheet">
